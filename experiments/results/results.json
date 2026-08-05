@@ -7,7 +7,7 @@
     "device": "cpu",
     "seed": 42,
     "bootstrap_resamples": 2000,
-    "total_runtime_s": 564.3
+    "total_runtime_s": 404.5
   },
   "models": {
     "embedder": "sentence-transformers/all-MiniLM-L6-v2",
@@ -57,11 +57,11 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 5.176,
-        "p50_ms": 5.117,
-        "p95_ms": 5.75,
-        "p99_ms": 6.696,
-        "throughput_qps": 193.22
+        "mean_ms": 5.038,
+        "p50_ms": 4.998,
+        "p95_ms": 5.433,
+        "p99_ms": 6.37,
+        "throughput_qps": 198.47
       }
     },
     "legacy_regex": {
@@ -96,7 +96,7 @@
         "p50_ms": 0.005,
         "p95_ms": 0.009,
         "p99_ms": 0.011,
-        "throughput_qps": 172807.0
+        "throughput_qps": 171956.97
       }
     },
     "secondary_transformer_verifier": {
@@ -127,11 +127,11 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 179.341,
-        "p50_ms": 173.21,
-        "p95_ms": 217.792,
-        "p99_ms": 244.211,
-        "throughput_qps": 5.58
+        "mean_ms": 168.188,
+        "p50_ms": 161.097,
+        "p95_ms": 192.901,
+        "p99_ms": 229.145,
+        "throughput_qps": 5.95
       }
     },
     "open_source_injection_classifier": {
@@ -162,11 +162,11 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 55.906,
-        "p50_ms": 51.61,
-        "p95_ms": 63.892,
-        "p99_ms": 85.914,
-        "throughput_qps": 17.89
+        "mean_ms": 44.733,
+        "p50_ms": 44.588,
+        "p95_ms": 48.929,
+        "p99_ms": 55.673,
+        "throughput_qps": 22.35
       },
       "note": "deepset/deberta-v3-base-injection, fine-tuned specifically for this task (unlike the zero-shot secondary-transformer baseline). Fair comparison HERE because it was not fine-tuned on our synthetic data; NOT evaluated on the public benchmark in Section VI-B because it WAS fine-tuned on that dataset (train/test contamination)."
     },
@@ -279,6 +279,14 @@
           "hi95": 0.7271
         }
       }
+    },
+    "significance": {
+      "shield_vs_secondary_mcnemar": {
+        "b_a_right_b_wrong": 26,
+        "c_a_wrong_b_right": 40,
+        "p_value": 0.108857
+      },
+      "note": "exact (binomial) McNemar's test on paired public-benchmark predictions, at the SAME already-tuned thresholds used throughout this transfer test (no retuning); small p-value means the two systems' error patterns are unlikely to be symmetric by chance."
     }
   },
   "stage2_rag_context_control": {
@@ -314,11 +322,11 @@
       },
       "latency": {
         "n": 240,
-        "mean_ms": 5.484,
-        "p50_ms": 5.484,
-        "p95_ms": 5.907,
-        "p99_ms": 6.121,
-        "throughput_qps": 182.36
+        "mean_ms": 5.209,
+        "p50_ms": 5.198,
+        "p95_ms": 5.673,
+        "p99_ms": 5.898,
+        "throughput_qps": 191.97
       }
     },
     "windowed_sub_chunk": {
@@ -349,11 +357,11 @@
       },
       "latency": {
         "n": 240,
-        "mean_ms": 20.21,
-        "p50_ms": 12.167,
-        "p95_ms": 34.163,
-        "p99_ms": 34.628,
-        "throughput_qps": 49.48
+        "mean_ms": 19.71,
+        "p50_ms": 12.111,
+        "p95_ms": 33.26,
+        "p99_ms": 33.754,
+        "throughput_qps": 50.73
       }
     },
     "windowed_vs_whole_mcnemar": {
@@ -398,11 +406,11 @@
     },
     "latency": {
       "n": 240,
-      "mean_ms": 105.715,
-      "p50_ms": 68.024,
-      "p95_ms": 178.051,
-      "p99_ms": 179.414,
-      "throughput_qps": 9.46
+      "mean_ms": 99.207,
+      "p50_ms": 58.663,
+      "p95_ms": 167.922,
+      "p99_ms": 169.223,
+      "throughput_qps": 10.08
     },
     "shared_vs_dedicated_mcnemar": {
       "b_a_right_b_wrong": 0,
@@ -443,11 +451,11 @@
     },
     "latency": {
       "n": 240,
-      "mean_ms": 32.642,
-      "p50_ms": 32.493,
-      "p95_ms": 34.706,
-      "p99_ms": 35.892,
-      "throughput_qps": 30.64
+      "mean_ms": 31.449,
+      "p50_ms": 31.118,
+      "p95_ms": 34.101,
+      "p99_ms": 36.875,
+      "throughput_qps": 31.8
     },
     "recall_by_hallucination_type": {
       "numeric_contradiction": 1.0,
@@ -489,11 +497,11 @@
     },
     "latency": {
       "n": 360,
-      "mean_ms": 31.775,
-      "p50_ms": 31.571,
-      "p95_ms": 34.924,
-      "p99_ms": 39.649,
-      "throughput_qps": 31.47
+      "mean_ms": 29.91,
+      "p50_ms": 29.974,
+      "p95_ms": 32.009,
+      "p99_ms": 32.681,
+      "throughput_qps": 33.43
     }
   },
   "ablation_pipeline_coverage": {
@@ -511,7 +519,7 @@
           "hallucination": 0.01
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 5.176
+        "additive_mean_latency_ms": 5.038
       },
       "stage1_plus_stage2": {
         "active_stages": [
@@ -525,7 +533,7 @@
           "hallucination": 0.01
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 25.386
+        "additive_mean_latency_ms": 24.748
       },
       "full_pipeline": {
         "active_stages": [
@@ -540,7 +548,7 @@
           "hallucination": 0.03
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 58.028
+        "additive_mean_latency_ms": 56.197
       }
     }
   },
@@ -552,18 +560,18 @@
     "f1": 0.7528,
     "recall_by_type": {
       "name": 0.593,
-      "phone": 1.0,
       "cc": 1.0,
       "email": 1.0,
+      "phone": 1.0,
       "ssn": 1.0
     },
     "latency": {
       "n": 150,
-      "mean_ms": 28.743,
-      "p50_ms": 25.229,
-      "p95_ms": 28.508,
-      "p99_ms": 30.442,
-      "throughput_qps": 34.79
+      "mean_ms": 27.691,
+      "p50_ms": 23.437,
+      "p95_ms": 26.679,
+      "p99_ms": 28.084,
+      "throughput_qps": 36.11
     }
   },
   "end_to_end_pipeline_latency": {
@@ -571,11 +579,11 @@
     "n_trials": 200,
     "latency": {
       "n": 200,
-      "mean_ms": 67.08,
-      "p50_ms": 69.243,
-      "p95_ms": 72.192,
-      "p99_ms": 73.866,
-      "throughput_qps": 14.91
+      "mean_ms": 63.461,
+      "p50_ms": 65.315,
+      "p95_ms": 68.673,
+      "p99_ms": 69.987,
+      "throughput_qps": 15.76
     }
   },
   "comparative_summary": {
@@ -591,13 +599,13 @@
     },
     "p99_latency_ms": {
       "legacy_regex_filters": 0.011,
-      "secondary_transformer_verification": 244.211,
-      "proposed_stage1_shield": 6.696
+      "secondary_transformer_verification": 229.145,
+      "proposed_stage1_shield": 6.37
     },
     "throughput_qps": {
-      "legacy_regex_filters": 172807.0,
-      "secondary_transformer_verification": 5.58,
-      "proposed_stage1_shield": 193.22
+      "legacy_regex_filters": 171956.97,
+      "secondary_transformer_verification": 5.95,
+      "proposed_stage1_shield": 198.47
     },
     "relative_throughput_vs_legacy_pct": {
       "legacy_regex_filters": 100.0,

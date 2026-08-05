@@ -319,6 +319,9 @@ def main():
         pub_secondary_scores, _ = run_stage1_system(secondary.score, pub)
         pub_labels = [1 if e["label"] == "adversarial" else 0 for e in pub]
 
+        mcnemar_shield_vs_secondary_public = mcnemar_test(pub_labels, pub_scores, tau_injection,
+                                                            pub_secondary_scores, tau_secondary)
+
         results["stage1_public_benchmark_transfer"] = {
             "source": "deepset/prompt-injections (Hugging Face, train+test splits combined)",
             "caveat": "this dataset's positive label was built around a task-oriented chatbot "
@@ -332,6 +335,13 @@ def main():
             "proposed_semantic_shield": eval_binary(pub_scores, pub_labels, tau_injection, with_ci=True),
             "legacy_regex": eval_binary(pub_legacy_scores, pub_labels, tau_legacy, with_ci=True),
             "secondary_transformer_verifier": eval_binary(pub_secondary_scores, pub_labels, tau_secondary, with_ci=True),
+            "significance": {
+                "shield_vs_secondary_mcnemar": mcnemar_shield_vs_secondary_public,
+                "note": "exact (binomial) McNemar's test on paired public-benchmark predictions, at the "
+                        "SAME already-tuned thresholds used throughout this transfer test (no retuning); "
+                        "small p-value means the two systems' error patterns are unlikely to be symmetric "
+                        "by chance.",
+            },
         }
         raw["public_labels"] = np.array(pub_labels)
         raw["public_shield_scores"] = np.array(pub_scores)
