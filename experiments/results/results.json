@@ -1,0 +1,608 @@
+{
+  "meta": {
+    "platform": "macOS-14.6-arm64-arm-64bit",
+    "python": "3.9.6 (default, Nov 11 2024, 03:15:38) \n[Clang 16.0.0 (clang-1600.0.26.6)]",
+    "torch": "2.8.0",
+    "torch_threads": 5,
+    "device": "cpu",
+    "seed": 42,
+    "bootstrap_resamples": 2000,
+    "total_runtime_s": 564.3
+  },
+  "models": {
+    "embedder": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedder_params": 22713216,
+    "ner": "dslim/bert-base-NER",
+    "entailment": "cross-encoder/nli-deberta-v3-small",
+    "entailment_params": 141897219,
+    "secondary_verifier": "facebook/bart-large-mnli",
+    "secondary_verifier_params": 407344131,
+    "open_source_injection_classifier": "deepset/deberta-v3-base-injection",
+    "open_source_injection_classifier_params": 184423682,
+    "dedicated_embedder_ablation": "sentence-transformers/all-mpnet-base-v2",
+    "dedicated_embedder_ablation_params": 109486464,
+    "reference_bank_size": 30
+  },
+  "stage1_injection_detection": {
+    "dataset": {
+      "n_dev": 240,
+      "n_test": 360,
+      "n_families": 12
+    },
+    "proposed_semantic_shield": {
+      "threshold": 0.47956156730651855,
+      "precision": 0.9748,
+      "recall": 0.6444,
+      "f1": 0.7759,
+      "fpr": 0.0167,
+      "tp": 116,
+      "fp": 3,
+      "tn": 177,
+      "fn": 64,
+      "auroc": 0.9367,
+      "auprc": 0.9421,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.5765,
+          "hi95": 0.7165
+        },
+        "precision_ci": {
+          "lo95": 0.9417,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.9126,
+          "hi95": 0.9588
+        }
+      },
+      "latency": {
+        "n": 360,
+        "mean_ms": 5.176,
+        "p50_ms": 5.117,
+        "p95_ms": 5.75,
+        "p99_ms": 6.696,
+        "throughput_qps": 193.22
+      }
+    },
+    "legacy_regex": {
+      "threshold": 1.0,
+      "precision": 1.0,
+      "recall": 0.2556,
+      "f1": 0.4071,
+      "fpr": 0.0,
+      "tp": 46,
+      "fp": 0,
+      "tn": 180,
+      "fn": 134,
+      "auroc": 0.6278,
+      "auprc": 0.6278,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.1917,
+          "hi95": 0.3207
+        },
+        "precision_ci": {
+          "lo95": 1.0,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.5959,
+          "hi95": 0.6603
+        }
+      },
+      "latency": {
+        "n": 360,
+        "mean_ms": 0.006,
+        "p50_ms": 0.005,
+        "p95_ms": 0.009,
+        "p99_ms": 0.011,
+        "throughput_qps": 172807.0
+      }
+    },
+    "secondary_transformer_verifier": {
+      "threshold": 0.5380170941352844,
+      "precision": 0.9348,
+      "recall": 0.4778,
+      "f1": 0.6324,
+      "fpr": 0.0333,
+      "tp": 86,
+      "fp": 6,
+      "tn": 174,
+      "fn": 94,
+      "auroc": 0.7713,
+      "auprc": 0.8293,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.4054,
+          "hi95": 0.5528
+        },
+        "precision_ci": {
+          "lo95": 0.8784,
+          "hi95": 0.98
+        },
+        "auroc_ci": {
+          "lo95": 0.7202,
+          "hi95": 0.8218
+        }
+      },
+      "latency": {
+        "n": 360,
+        "mean_ms": 179.341,
+        "p50_ms": 173.21,
+        "p95_ms": 217.792,
+        "p99_ms": 244.211,
+        "throughput_qps": 5.58
+      }
+    },
+    "open_source_injection_classifier": {
+      "threshold": 0.2624480128288269,
+      "precision": 0.9624,
+      "recall": 0.9944,
+      "f1": 0.9781,
+      "fpr": 0.0389,
+      "tp": 179,
+      "fp": 7,
+      "tn": 173,
+      "fn": 1,
+      "auroc": 0.9992,
+      "auprc": 0.9992,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.9819,
+          "hi95": 1.0
+        },
+        "precision_ci": {
+          "lo95": 0.9333,
+          "hi95": 0.9883
+        },
+        "auroc_ci": {
+          "lo95": 0.9979,
+          "hi95": 0.9999
+        }
+      },
+      "latency": {
+        "n": 360,
+        "mean_ms": 55.906,
+        "p50_ms": 51.61,
+        "p95_ms": 63.892,
+        "p99_ms": 85.914,
+        "throughput_qps": 17.89
+      },
+      "note": "deepset/deberta-v3-base-injection, fine-tuned specifically for this task (unlike the zero-shot secondary-transformer baseline). Fair comparison HERE because it was not fine-tuned on our synthetic data; NOT evaluated on the public benchmark in Section VI-B because it WAS fine-tuned on that dataset (train/test contamination)."
+    },
+    "shield_generalization": {
+      "recall_in_reference_families": 0.7231,
+      "recall_held_out_families": 0.44
+    },
+    "significance": {
+      "shield_vs_legacy_mcnemar": {
+        "b_a_right_b_wrong": 75,
+        "c_a_wrong_b_right": 8,
+        "p_value": 0.0
+      },
+      "shield_vs_secondary_mcnemar": {
+        "b_a_right_b_wrong": 75,
+        "c_a_wrong_b_right": 42,
+        "p_value": 0.002928
+      },
+      "shield_vs_opensource_mcnemar": {
+        "b_a_right_b_wrong": 8,
+        "c_a_wrong_b_right": 67,
+        "p_value": 0.0
+      },
+      "note": "exact (binomial) McNemar's test on paired test-set predictions; small p-value means the two systems' error patterns are unlikely to be symmetric by chance."
+    }
+  },
+  "stage1_public_benchmark_transfer": {
+    "source": "deepset/prompt-injections (Hugging Face, train+test splits combined)",
+    "caveat": "this dataset's positive label was built around a task-oriented chatbot out-of-scope-detection use case, not a pure security-attack definition -- it also labels some generic out-of-scope requests (e.g. casual roleplay, unrelated code-generation asks) as positive alongside classic injection attempts. Recall here measures transfer to a related but not identical construct.",
+    "n": 662,
+    "n_adversarial": 263,
+    "n_benign": 399,
+    "proposed_semantic_shield": {
+      "threshold": 0.47956156730651855,
+      "precision": 0.8,
+      "recall": 0.0456,
+      "f1": 0.0863,
+      "fpr": 0.0075,
+      "tp": 12,
+      "fp": 3,
+      "tn": 396,
+      "fn": 251,
+      "auroc": 0.7099,
+      "auprc": 0.6458,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.0214,
+          "hi95": 0.0734
+        },
+        "precision_ci": {
+          "lo95": 0.5833,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.6679,
+          "hi95": 0.7514
+        }
+      }
+    },
+    "legacy_regex": {
+      "threshold": 1.0,
+      "precision": 1.0,
+      "recall": 0.0228,
+      "f1": 0.0446,
+      "fpr": 0.0,
+      "tp": 6,
+      "fp": 0,
+      "tn": 399,
+      "fn": 257,
+      "auroc": 0.5114,
+      "auprc": 0.411,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.0075,
+          "hi95": 0.0433
+        },
+        "precision_ci": {
+          "lo95": 1.0,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.5037,
+          "hi95": 0.5217
+        }
+      }
+    },
+    "secondary_transformer_verifier": {
+      "threshold": 0.5380170941352844,
+      "precision": 0.7018,
+      "recall": 0.1521,
+      "f1": 0.25,
+      "fpr": 0.0426,
+      "tp": 40,
+      "fp": 17,
+      "tn": 382,
+      "fn": 223,
+      "auroc": 0.6855,
+      "auprc": 0.5762,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.1098,
+          "hi95": 0.1983
+        },
+        "precision_ci": {
+          "lo95": 0.5797,
+          "hi95": 0.8155
+        },
+        "auroc_ci": {
+          "lo95": 0.6448,
+          "hi95": 0.7271
+        }
+      }
+    }
+  },
+  "stage2_rag_context_control": {
+    "dataset": {
+      "n_dev": 160,
+      "n_test": 240
+    },
+    "whole_chunk": {
+      "threshold": 0.3741195499897003,
+      "precision": 1.0,
+      "recall": 0.3,
+      "f1": 0.4615,
+      "fpr": 0.0,
+      "tp": 36,
+      "fp": 0,
+      "tn": 120,
+      "fn": 84,
+      "auroc": 0.7367,
+      "auprc": 0.7747,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.2195,
+          "hi95": 0.3821
+        },
+        "precision_ci": {
+          "lo95": 1.0,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.6735,
+          "hi95": 0.7942
+        }
+      },
+      "latency": {
+        "n": 240,
+        "mean_ms": 5.484,
+        "p50_ms": 5.484,
+        "p95_ms": 5.907,
+        "p99_ms": 6.121,
+        "throughput_qps": 182.36
+      }
+    },
+    "windowed_sub_chunk": {
+      "threshold": 0.4756806492805481,
+      "precision": 1.0,
+      "recall": 0.6417,
+      "f1": 0.7817,
+      "fpr": 0.0,
+      "tp": 77,
+      "fp": 0,
+      "tn": 120,
+      "fn": 43,
+      "auroc": 0.9526,
+      "auprc": 0.9545,
+      "bootstrap_95ci": {
+        "recall_ci": {
+          "lo95": 0.5556,
+          "hi95": 0.7258
+        },
+        "precision_ci": {
+          "lo95": 1.0,
+          "hi95": 1.0
+        },
+        "auroc_ci": {
+          "lo95": 0.9265,
+          "hi95": 0.9738
+        }
+      },
+      "latency": {
+        "n": 240,
+        "mean_ms": 20.21,
+        "p50_ms": 12.167,
+        "p95_ms": 34.163,
+        "p99_ms": 34.628,
+        "throughput_qps": 49.48
+      }
+    },
+    "windowed_vs_whole_mcnemar": {
+      "b_a_right_b_wrong": 41,
+      "c_a_wrong_b_right": 0,
+      "p_value": 0.0
+    },
+    "relevance_score_by_class": {
+      "clean_mean": 0.3793,
+      "poisoned_mean": 0.3335,
+      "note": "similar relevance means => poisoned chunks are not trivially separable by topical relevance alone; detection relies on the injection-similarity signal."
+    }
+  },
+  "stage2_ablation_dedicated_embedder": {
+    "note": "same windowed scoring mechanism as the shared-embedding result above, but using a second, independently-loaded encoder (all-mpnet-base-v2) instead of reusing Stage 1's MiniLM instance and reference bank.",
+    "embedder": "sentence-transformers/all-mpnet-base-v2",
+    "extra_params_loaded": 109486464,
+    "threshold": 0.4112766683101654,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "fpr": 0.0,
+    "tp": 120,
+    "fp": 0,
+    "tn": 120,
+    "fn": 0,
+    "auroc": 1.0,
+    "auprc": 1.0,
+    "bootstrap_95ci": {
+      "recall_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      },
+      "precision_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      },
+      "auroc_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      }
+    },
+    "latency": {
+      "n": 240,
+      "mean_ms": 105.715,
+      "p50_ms": 68.024,
+      "p95_ms": 178.051,
+      "p99_ms": 179.414,
+      "throughput_qps": 9.46
+    },
+    "shared_vs_dedicated_mcnemar": {
+      "b_a_right_b_wrong": 0,
+      "c_a_wrong_b_right": 43,
+      "p_value": 0.0
+    }
+  },
+  "stage3_entailment_auditing": {
+    "dataset": {
+      "n_dev": 160,
+      "n_test": 240
+    },
+    "tau_entailment": 0.0004,
+    "threshold": 0.9995580490503926,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "fpr": 0.0,
+    "tp": 120,
+    "fp": 0,
+    "tn": 120,
+    "fn": 0,
+    "auroc": 1.0,
+    "auprc": 1.0,
+    "bootstrap_95ci": {
+      "recall_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      },
+      "precision_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      },
+      "auroc_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      }
+    },
+    "latency": {
+      "n": 240,
+      "mean_ms": 32.642,
+      "p50_ms": 32.493,
+      "p95_ms": 34.706,
+      "p99_ms": 35.892,
+      "throughput_qps": 30.64
+    },
+    "recall_by_hallucination_type": {
+      "numeric_contradiction": 1.0,
+      "unsupported_addition": 1.0
+    }
+  },
+  "stage3_hard_entailment_auditing": {
+    "note": "subtle perturbations (5-15% numeric drift, direction flips at unchanged magnitude, topically-consistent unsupported additions) instead of the easy set's 30-100% swings and off-topic fabrications. Evaluated at the SAME tau_entailment tuned on the easy dev split -- a genuine transfer test, not a re-optimized one.",
+    "n": 360,
+    "threshold": 0.9995580490503926,
+    "precision": 1.0,
+    "recall": 0.0333,
+    "f1": 0.0645,
+    "fpr": 0.0,
+    "tp": 6,
+    "fp": 0,
+    "tn": 180,
+    "fn": 174,
+    "auroc": 0.9944,
+    "auprc": 0.9952,
+    "bootstrap_95ci": {
+      "recall_ci": {
+        "lo95": 0.0107,
+        "hi95": 0.0618
+      },
+      "precision_ci": {
+        "lo95": 1.0,
+        "hi95": 1.0
+      },
+      "auroc_ci": {
+        "lo95": 0.9891,
+        "hi95": 0.9984
+      }
+    },
+    "recall_by_hallucination_type": {
+      "subtle_numeric_drift": 0.0,
+      "direction_flip": 0.0,
+      "subtle_unsupported_addition": 0.1
+    },
+    "latency": {
+      "n": 360,
+      "mean_ms": 31.775,
+      "p50_ms": 31.571,
+      "p95_ms": 34.924,
+      "p99_ms": 39.649,
+      "throughput_qps": 31.47
+    }
+  },
+  "ablation_pipeline_coverage": {
+    "note": "each configuration's coverage is measured over the SAME n=100-per-vector mixed trial set (injection / RAG poisoning / hard-set hallucination) plus a benign negative control, using already-tuned per-stage thresholds throughout (no re-tuning per configuration). Latency is additive from each stage's independently measured mean latency, not re-timed as a pipeline.",
+    "n_per_vector": 100,
+    "configurations": {
+      "stage1_only": {
+        "active_stages": [
+          "stage1"
+        ],
+        "overall_attack_coverage": 0.2467,
+        "coverage_by_vector": {
+          "injection": 0.71,
+          "poisoning": 0.02,
+          "hallucination": 0.01
+        },
+        "false_positive_rate_on_benign": 0.03,
+        "additive_mean_latency_ms": 5.176
+      },
+      "stage1_plus_stage2": {
+        "active_stages": [
+          "stage1",
+          "stage2"
+        ],
+        "overall_attack_coverage": 0.4333,
+        "coverage_by_vector": {
+          "injection": 0.71,
+          "poisoning": 0.58,
+          "hallucination": 0.01
+        },
+        "false_positive_rate_on_benign": 0.03,
+        "additive_mean_latency_ms": 25.386
+      },
+      "full_pipeline": {
+        "active_stages": [
+          "stage1",
+          "stage2",
+          "stage3"
+        ],
+        "overall_attack_coverage": 0.44,
+        "coverage_by_vector": {
+          "injection": 0.71,
+          "poisoning": 0.58,
+          "hallucination": 0.03
+        },
+        "false_positive_rate_on_benign": 0.03,
+        "additive_mean_latency_ms": 58.028
+      }
+    }
+  },
+  "pii_masking": {
+    "n_sentences": 150,
+    "n_true_spans": 236,
+    "precision": 0.6745,
+    "recall": 0.8517,
+    "f1": 0.7528,
+    "recall_by_type": {
+      "name": 0.593,
+      "phone": 1.0,
+      "cc": 1.0,
+      "email": 1.0,
+      "ssn": 1.0
+    },
+    "latency": {
+      "n": 150,
+      "mean_ms": 28.743,
+      "p50_ms": 25.229,
+      "p95_ms": 28.508,
+      "p99_ms": 30.442,
+      "throughput_qps": 34.79
+    }
+  },
+  "end_to_end_pipeline_latency": {
+    "note": "worst-case path: benign prompt + clean context, so all 3 stages execute (no early exit). Sequential single-request timing, CPU only.",
+    "n_trials": 200,
+    "latency": {
+      "n": 200,
+      "mean_ms": 67.08,
+      "p50_ms": 69.243,
+      "p95_ms": 72.192,
+      "p99_ms": 73.866,
+      "throughput_qps": 14.91
+    }
+  },
+  "comparative_summary": {
+    "injection_detection_recall": {
+      "legacy_regex_filters": 0.2556,
+      "secondary_transformer_verification": 0.4778,
+      "proposed_stage1_shield": 0.6444
+    },
+    "false_positive_rate": {
+      "legacy_regex_filters": 0.0,
+      "secondary_transformer_verification": 0.0333,
+      "proposed_stage1_shield": 0.0167
+    },
+    "p99_latency_ms": {
+      "legacy_regex_filters": 0.011,
+      "secondary_transformer_verification": 244.211,
+      "proposed_stage1_shield": 6.696
+    },
+    "throughput_qps": {
+      "legacy_regex_filters": 172807.0,
+      "secondary_transformer_verification": 5.58,
+      "proposed_stage1_shield": 193.22
+    },
+    "relative_throughput_vs_legacy_pct": {
+      "legacy_regex_filters": 100.0,
+      "secondary_transformer_verification": 0.0,
+      "proposed_stage1_shield": 0.1
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "note": "AUROC on Stage 2 DEV split only (n=160), never test.",
+  "grid": [
+    {
+      "window_size": 8,
+      "stride": 4,
+      "dev_auroc": 0.95,
+      "avg_windows_per_chunk": 5.78
+    },
+    {
+      "window_size": 8,
+      "stride": 8,
+      "dev_auroc": 0.9208,
+      "avg_windows_per_chunk": 3.68
+    },
+    {
+      "window_size": 12,
+      "stride": 6,
+      "dev_auroc": 0.9706,
+      "avg_windows_per_chunk": 3.58
+    },
+    {
+      "window_size": 12,
+      "stride": 12,
+      "dev_auroc": 0.9844,
+      "avg_windows_per_chunk": 2.59
+    },
+    {
+      "window_size": 16,
+      "stride": 8,
+      "dev_auroc": 0.9987,
+      "avg_windows_per_chunk": 2.68
+    },
+    {
+      "window_size": 16,
+      "stride": 16,
+      "dev_auroc": 0.9628,
+      "avg_windows_per_chunk": 2.18
+    },
+    {
+      "window_size": 20,
+      "stride": 10,
+      "dev_auroc": 1.0,
+      "avg_windows_per_chunk": 1.99
+    }
+  ]
+}
