@@ -7,7 +7,7 @@
     "device": "cpu",
     "seed": 42,
     "bootstrap_resamples": 2000,
-    "total_runtime_s": 404.5
+    "total_runtime_s": 432.7
   },
   "models": {
     "embedder": "sentence-transformers/all-MiniLM-L6-v2",
@@ -30,24 +30,24 @@
       "n_families": 12
     },
     "proposed_semantic_shield": {
-      "threshold": 0.47956156730651855,
-      "precision": 0.9748,
-      "recall": 0.6444,
-      "f1": 0.7759,
+      "threshold": 0.47796997427940374,
+      "precision": 0.9752,
+      "recall": 0.6556,
+      "f1": 0.7841,
       "fpr": 0.0167,
-      "tp": 116,
+      "tp": 118,
       "fp": 3,
       "tn": 177,
-      "fn": 64,
+      "fn": 62,
       "auroc": 0.9367,
       "auprc": 0.9421,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.5765,
-          "hi95": 0.7165
+          "lo95": 0.5876,
+          "hi95": 0.7268
         },
         "precision_ci": {
-          "lo95": 0.9417,
+          "lo95": 0.9421,
           "hi95": 1.0
         },
         "auroc_ci": {
@@ -57,15 +57,15 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 5.038,
-        "p50_ms": 4.998,
-        "p95_ms": 5.433,
-        "p99_ms": 6.37,
-        "throughput_qps": 198.47
+        "mean_ms": 5.183,
+        "p50_ms": 5.155,
+        "p95_ms": 5.595,
+        "p99_ms": 6.021,
+        "throughput_qps": 192.95
       }
     },
     "legacy_regex": {
-      "threshold": 1.0,
+      "threshold": 5e-324,
       "precision": 1.0,
       "recall": 0.2556,
       "f1": 0.4071,
@@ -95,30 +95,30 @@
         "mean_ms": 0.006,
         "p50_ms": 0.005,
         "p95_ms": 0.009,
-        "p99_ms": 0.011,
-        "throughput_qps": 171956.97
+        "p99_ms": 0.01,
+        "throughput_qps": 175229.72
       }
     },
     "secondary_transformer_verifier": {
-      "threshold": 0.5380170941352844,
-      "precision": 0.9348,
-      "recall": 0.4778,
-      "f1": 0.6324,
+      "threshold": 0.535024642944336,
+      "precision": 0.9355,
+      "recall": 0.4833,
+      "f1": 0.6374,
       "fpr": 0.0333,
-      "tp": 86,
+      "tp": 87,
       "fp": 6,
       "tn": 174,
-      "fn": 94,
+      "fn": 93,
       "auroc": 0.7713,
       "auprc": 0.8293,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.4054,
-          "hi95": 0.5528
+          "lo95": 0.4121,
+          "hi95": 0.5556
         },
         "precision_ci": {
-          "lo95": 0.8784,
-          "hi95": 0.98
+          "lo95": 0.8803,
+          "hi95": 0.9802
         },
         "auroc_ci": {
           "lo95": 0.7202,
@@ -127,22 +127,22 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 168.188,
-        "p50_ms": 161.097,
-        "p95_ms": 192.901,
-        "p99_ms": 229.145,
-        "throughput_qps": 5.95
+        "mean_ms": 173.46,
+        "p50_ms": 168.655,
+        "p95_ms": 195.306,
+        "p99_ms": 235.601,
+        "throughput_qps": 5.77
       }
     },
     "open_source_injection_classifier": {
-      "threshold": 0.2624480128288269,
-      "precision": 0.9624,
+      "threshold": 0.1699432730674744,
+      "precision": 0.9521,
       "recall": 0.9944,
-      "f1": 0.9781,
-      "fpr": 0.0389,
+      "f1": 0.9728,
+      "fpr": 0.05,
       "tp": 179,
-      "fp": 7,
-      "tn": 173,
+      "fp": 9,
+      "tn": 171,
       "fn": 1,
       "auroc": 0.9992,
       "auprc": 0.9992,
@@ -152,8 +152,8 @@
           "hi95": 1.0
         },
         "precision_ci": {
-          "lo95": 0.9333,
-          "hi95": 0.9883
+          "lo95": 0.92,
+          "hi95": 0.9795
         },
         "auroc_ci": {
           "lo95": 0.9979,
@@ -162,32 +162,32 @@
       },
       "latency": {
         "n": 360,
-        "mean_ms": 44.733,
-        "p50_ms": 44.588,
-        "p95_ms": 48.929,
-        "p99_ms": 55.673,
-        "throughput_qps": 22.35
+        "mean_ms": 46.77,
+        "p50_ms": 46.402,
+        "p95_ms": 52.105,
+        "p99_ms": 59.304,
+        "throughput_qps": 21.38
       },
       "note": "deepset/deberta-v3-base-injection, fine-tuned specifically for this task (unlike the zero-shot secondary-transformer baseline). Fair comparison HERE because it was not fine-tuned on our synthetic data; NOT evaluated on the public benchmark in Section VI-B because it WAS fine-tuned on that dataset (train/test contamination)."
     },
     "shield_generalization": {
-      "recall_in_reference_families": 0.7231,
-      "recall_held_out_families": 0.44
+      "recall_in_reference_families": 0.7308,
+      "recall_held_out_families": 0.46
     },
     "significance": {
       "shield_vs_legacy_mcnemar": {
-        "b_a_right_b_wrong": 75,
+        "b_a_right_b_wrong": 77,
         "c_a_wrong_b_right": 8,
         "p_value": 0.0
       },
       "shield_vs_secondary_mcnemar": {
-        "b_a_right_b_wrong": 75,
-        "c_a_wrong_b_right": 42,
-        "p_value": 0.002928
+        "b_a_right_b_wrong": 77,
+        "c_a_wrong_b_right": 43,
+        "p_value": 0.002447
       },
       "shield_vs_opensource_mcnemar": {
-        "b_a_right_b_wrong": 8,
-        "c_a_wrong_b_right": 67,
+        "b_a_right_b_wrong": 10,
+        "c_a_wrong_b_right": 65,
         "p_value": 0.0
       },
       "note": "exact (binomial) McNemar's test on paired test-set predictions; small p-value means the two systems' error patterns are unlikely to be symmetric by chance."
@@ -200,7 +200,7 @@
     "n_adversarial": 263,
     "n_benign": 399,
     "proposed_semantic_shield": {
-      "threshold": 0.47956156730651855,
+      "threshold": 0.47796997427940374,
       "precision": 0.8,
       "recall": 0.0456,
       "f1": 0.0863,
@@ -227,7 +227,7 @@
       }
     },
     "legacy_regex": {
-      "threshold": 1.0,
+      "threshold": 5e-324,
       "precision": 1.0,
       "recall": 0.0228,
       "f1": 0.0446,
@@ -254,7 +254,7 @@
       }
     },
     "secondary_transformer_verifier": {
-      "threshold": 0.5380170941352844,
+      "threshold": 0.535024642944336,
       "precision": 0.7018,
       "recall": 0.1521,
       "f1": 0.25,
@@ -295,21 +295,21 @@
       "n_test": 240
     },
     "whole_chunk": {
-      "threshold": 0.3741195499897003,
+      "threshold": 0.37031769752502447,
       "precision": 1.0,
-      "recall": 0.3,
-      "f1": 0.4615,
+      "recall": 0.325,
+      "f1": 0.4906,
       "fpr": 0.0,
-      "tp": 36,
+      "tp": 39,
       "fp": 0,
       "tn": 120,
-      "fn": 84,
+      "fn": 81,
       "auroc": 0.7367,
       "auprc": 0.7747,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.2195,
-          "hi95": 0.3821
+          "lo95": 0.2417,
+          "hi95": 0.4098
         },
         "precision_ci": {
           "lo95": 1.0,
@@ -322,29 +322,29 @@
       },
       "latency": {
         "n": 240,
-        "mean_ms": 5.209,
-        "p50_ms": 5.198,
-        "p95_ms": 5.673,
-        "p99_ms": 5.898,
-        "throughput_qps": 191.97
+        "mean_ms": 6.283,
+        "p50_ms": 6.191,
+        "p95_ms": 7.216,
+        "p99_ms": 7.762,
+        "throughput_qps": 159.15
       }
     },
     "windowed_sub_chunk": {
-      "threshold": 0.4756806492805481,
+      "threshold": 0.4714384078979493,
       "precision": 1.0,
-      "recall": 0.6417,
-      "f1": 0.7817,
+      "recall": 0.6833,
+      "f1": 0.8119,
       "fpr": 0.0,
-      "tp": 77,
+      "tp": 82,
       "fp": 0,
       "tn": 120,
-      "fn": 43,
+      "fn": 38,
       "auroc": 0.9526,
       "auprc": 0.9545,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.5556,
-          "hi95": 0.7258
+          "lo95": 0.5965,
+          "hi95": 0.7636
         },
         "precision_ci": {
           "lo95": 1.0,
@@ -357,15 +357,15 @@
       },
       "latency": {
         "n": 240,
-        "mean_ms": 19.71,
-        "p50_ms": 12.111,
-        "p95_ms": 33.26,
-        "p99_ms": 33.754,
-        "throughput_qps": 50.73
+        "mean_ms": 22.866,
+        "p50_ms": 25.174,
+        "p95_ms": 38.682,
+        "p99_ms": 40.074,
+        "throughput_qps": 43.73
       }
     },
     "windowed_vs_whole_mcnemar": {
-      "b_a_right_b_wrong": 41,
+      "b_a_right_b_wrong": 43,
       "c_a_wrong_b_right": 0,
       "p_value": 0.0
     },
@@ -379,7 +379,7 @@
     "note": "same windowed scoring mechanism as the shared-embedding result above, but using a second, independently-loaded encoder (all-mpnet-base-v2) instead of reusing Stage 1's MiniLM instance and reference bank.",
     "embedder": "sentence-transformers/all-mpnet-base-v2",
     "extra_params_loaded": 109486464,
-    "threshold": 0.4112766683101654,
+    "threshold": 0.3754928410053254,
     "precision": 1.0,
     "recall": 1.0,
     "f1": 1.0,
@@ -406,15 +406,15 @@
     },
     "latency": {
       "n": 240,
-      "mean_ms": 99.207,
-      "p50_ms": 58.663,
-      "p95_ms": 167.922,
-      "p99_ms": 169.223,
-      "throughput_qps": 10.08
+      "mean_ms": 110.638,
+      "p50_ms": 82.733,
+      "p95_ms": 185.386,
+      "p99_ms": 197.157,
+      "throughput_qps": 9.04
     },
     "shared_vs_dedicated_mcnemar": {
       "b_a_right_b_wrong": 0,
-      "c_a_wrong_b_right": 43,
+      "c_a_wrong_b_right": 38,
       "p_value": 0.0
     }
   },
@@ -423,8 +423,8 @@
       "n_dev": 160,
       "n_test": 240
     },
-    "tau_entailment": 0.0004,
-    "threshold": 0.9995580490503926,
+    "tau_entailment": 0.9705,
+    "threshold": 0.02946776151657105,
     "precision": 1.0,
     "recall": 1.0,
     "f1": 1.0,
@@ -451,11 +451,11 @@
     },
     "latency": {
       "n": 240,
-      "mean_ms": 31.449,
-      "p50_ms": 31.118,
-      "p95_ms": 34.101,
-      "p99_ms": 36.875,
-      "throughput_qps": 31.8
+      "mean_ms": 32.684,
+      "p50_ms": 32.285,
+      "p95_ms": 35.237,
+      "p99_ms": 36.63,
+      "throughput_qps": 30.6
     },
     "recall_by_hallucination_type": {
       "numeric_contradiction": 1.0,
@@ -465,21 +465,21 @@
   "stage3_hard_entailment_auditing": {
     "note": "subtle perturbations (5-15% numeric drift, direction flips at unchanged magnitude, topically-consistent unsupported additions) instead of the easy set's 30-100% swings and off-topic fabrications. Evaluated at the SAME tau_entailment tuned on the easy dev split -- a genuine transfer test, not a re-optimized one.",
     "n": 360,
-    "threshold": 0.9995580490503926,
+    "threshold": 0.02946776151657105,
     "precision": 1.0,
-    "recall": 0.0333,
-    "f1": 0.0645,
+    "recall": 0.9222,
+    "f1": 0.9595,
     "fpr": 0.0,
-    "tp": 6,
+    "tp": 166,
     "fp": 0,
     "tn": 180,
-    "fn": 174,
+    "fn": 14,
     "auroc": 0.9944,
     "auprc": 0.9952,
     "bootstrap_95ci": {
       "recall_ci": {
-        "lo95": 0.0107,
-        "hi95": 0.0618
+        "lo95": 0.8823,
+        "hi95": 0.9579
       },
       "precision_ci": {
         "lo95": 1.0,
@@ -491,17 +491,17 @@
       }
     },
     "recall_by_hallucination_type": {
-      "subtle_numeric_drift": 0.0,
-      "direction_flip": 0.0,
-      "subtle_unsupported_addition": 0.1
+      "subtle_numeric_drift": 0.7667,
+      "direction_flip": 1.0,
+      "subtle_unsupported_addition": 1.0
     },
     "latency": {
       "n": 360,
-      "mean_ms": 29.91,
-      "p50_ms": 29.974,
-      "p95_ms": 32.009,
-      "p99_ms": 32.681,
-      "throughput_qps": 33.43
+      "mean_ms": 31.241,
+      "p50_ms": 31.253,
+      "p95_ms": 33.65,
+      "p99_ms": 35.232,
+      "throughput_qps": 32.01
     }
   },
   "ablation_pipeline_coverage": {
@@ -519,21 +519,21 @@
           "hallucination": 0.01
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 5.038
+        "additive_mean_latency_ms": 5.183
       },
       "stage1_plus_stage2": {
         "active_stages": [
           "stage1",
           "stage2"
         ],
-        "overall_attack_coverage": 0.4333,
+        "overall_attack_coverage": 0.4433,
         "coverage_by_vector": {
           "injection": 0.71,
-          "poisoning": 0.58,
+          "poisoning": 0.61,
           "hallucination": 0.01
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 24.748
+        "additive_mean_latency_ms": 28.049
       },
       "full_pipeline": {
         "active_stages": [
@@ -541,14 +541,14 @@
           "stage2",
           "stage3"
         ],
-        "overall_attack_coverage": 0.44,
+        "overall_attack_coverage": 0.7633,
         "coverage_by_vector": {
           "injection": 0.71,
-          "poisoning": 0.58,
-          "hallucination": 0.03
+          "poisoning": 0.61,
+          "hallucination": 0.97
         },
         "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 56.197
+        "additive_mean_latency_ms": 60.733
       }
     }
   },
@@ -559,19 +559,19 @@
     "recall": 0.8517,
     "f1": 0.7528,
     "recall_by_type": {
-      "name": 0.593,
       "cc": 1.0,
+      "name": 0.593,
+      "ssn": 1.0,
       "email": 1.0,
-      "phone": 1.0,
-      "ssn": 1.0
+      "phone": 1.0
     },
     "latency": {
       "n": 150,
-      "mean_ms": 27.691,
-      "p50_ms": 23.437,
-      "p95_ms": 26.679,
-      "p99_ms": 28.084,
-      "throughput_qps": 36.11
+      "mean_ms": 30.617,
+      "p50_ms": 26.435,
+      "p95_ms": 30.902,
+      "p99_ms": 35.104,
+      "throughput_qps": 32.66
     }
   },
   "end_to_end_pipeline_latency": {
@@ -579,18 +579,18 @@
     "n_trials": 200,
     "latency": {
       "n": 200,
-      "mean_ms": 63.461,
-      "p50_ms": 65.315,
-      "p95_ms": 68.673,
-      "p99_ms": 69.987,
-      "throughput_qps": 15.76
+      "mean_ms": 70.634,
+      "p50_ms": 72.503,
+      "p95_ms": 77.612,
+      "p99_ms": 83.0,
+      "throughput_qps": 14.16
     }
   },
   "comparative_summary": {
     "injection_detection_recall": {
       "legacy_regex_filters": 0.2556,
-      "secondary_transformer_verification": 0.4778,
-      "proposed_stage1_shield": 0.6444
+      "secondary_transformer_verification": 0.4833,
+      "proposed_stage1_shield": 0.6556
     },
     "false_positive_rate": {
       "legacy_regex_filters": 0.0,
@@ -598,14 +598,14 @@
       "proposed_stage1_shield": 0.0167
     },
     "p99_latency_ms": {
-      "legacy_regex_filters": 0.011,
-      "secondary_transformer_verification": 229.145,
-      "proposed_stage1_shield": 6.37
+      "legacy_regex_filters": 0.01,
+      "secondary_transformer_verification": 235.601,
+      "proposed_stage1_shield": 6.021
     },
     "throughput_qps": {
-      "legacy_regex_filters": 171956.97,
-      "secondary_transformer_verification": 5.95,
-      "proposed_stage1_shield": 198.47
+      "legacy_regex_filters": 175229.72,
+      "secondary_transformer_verification": 5.77,
+      "proposed_stage1_shield": 192.95
     },
     "relative_throughput_vs_legacy_pct": {
       "legacy_regex_filters": 100.0,

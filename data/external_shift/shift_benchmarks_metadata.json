@@ -1,0 +1,59 @@
+[
+  {
+    "slug": "deepset",
+    "dataset": "deepset/prompt-injections",
+    "config": null,
+    "splits": [
+      "train",
+      "test"
+    ],
+    "license": "Apache-2.0",
+    "construct_note": "Positive labels include injection and task-out-of-scope prompts.",
+    "n": 662,
+    "n_benign": 399,
+    "n_injection": 263,
+    "cached_path": "data/external_shift/deepset.jsonl"
+  },
+  {
+    "slug": "xtram",
+    "dataset": "xTRam1/safe-guard-prompt-injection",
+    "config": null,
+    "splits": [
+      "test"
+    ],
+    "license": "Not specified on the Hub card at retrieval time; fetched, not redistributed.",
+    "construct_note": "Mixed benign and prompt-injection classification benchmark.",
+    "n": 2049,
+    "n_benign": 1401,
+    "n_injection": 648,
+    "cached_path": "data/external_shift/xtram.jsonl"
+  },
+  {
+    "slug": "jasper",
+    "dataset": "JasperLS/prompt-injections",
+    "config": null,
+    "splits": [
+      "test"
+    ],
+    "license": "Not specified on the Hub card at retrieval time; fetched, not redistributed.",
+    "construct_note": "Small external test split; estimates have correspondingly wide uncertainty.",
+    "n": 116,
+    "n_benign": 56,
+    "n_injection": 60,
+    "cached_path": "data/external_shift/jasper.jsonl"
+  },
+  {
+    "slug": "neuralchemy",
+    "dataset": "neuralchemy/Prompt-injection-dataset",
+    "config": "core",
+    "splits": [
+      "test"
+    ],
+    "license": "Apache-2.0",
+    "construct_note": "Core test split with benign hard negatives and categorized attacks.",
+    "n": 942,
+    "n_benign": 390,
+    "n_injection": 552,
+    "cached_path": "data/external_shift/neuralchemy.jsonl"
+  }
+]

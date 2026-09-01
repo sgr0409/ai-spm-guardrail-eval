@@ -66,7 +66,11 @@ def select_threshold(dev_scores, dev_labels, target_fpr=0.05):
     Falls back to the FPR-minimizing threshold if no candidate meets the budget."""
     dev_scores = np.asarray(dev_scores)
     dev_labels = np.asarray(dev_labels)
-    candidates = sorted(set(dev_scores.tolist()), reverse=True)
+    unique = np.unique(dev_scores)
+    # With the inclusive decision rule ``score >= t``, an observed-value-only
+    # sweep cannot place the boundary immediately above a tied benign score.
+    # Include the representable boundary on both sides of every tie.
+    candidates = sorted(set(np.r_[unique, np.nextafter(unique, np.inf)].tolist()), reverse=True)
     neg = dev_labels == 0
     n_neg = max(neg.sum(), 1)
     best = None
