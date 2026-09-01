@@ -73,6 +73,27 @@ paper are CPU-only, single-threaded, single-request measurements (Apple M3
 Pro laptop), disclosed as such rather than presented as production-serving
 numbers.
 
+## Tests
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+42 unit tests covering the logic in `guardrail/` directly: L2 normalization
+and cosine-similarity scoring, the NER/PII span-overlap resolution algorithm
+(including a regression test for the leading-parenthesis phone-number bug
+disclosed in the paper), the `_word_windows` windowing/striding arithmetic,
+the entailment softmax and label-index lookup, the three-stage pipeline's
+control flow (early exit at each stage, decision labeling), and every
+baseline's label-extraction logic. None of these tests load the real
+embedding/NLI/classification models -- model-backed classes are instantiated
+via `__new__` with the model-dependent calls stubbed, so the suite runs in
+well under a second and exercises the same code paths `run_benchmark.py`
+does without any network access or model-download cost. This checks the
+mechanism `run_benchmark.py`'s numbers depend on; it does not re-verify
+those numbers themselves, which come from the real models via the
+reproduction steps below.
+
 ## Reproducing everything, end to end
 
 ```bash
