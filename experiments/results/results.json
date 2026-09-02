@@ -7,7 +7,17 @@
     "device": "cpu",
     "seed": 42,
     "bootstrap_resamples": 2000,
-    "total_runtime_s": 432.7
+    "package_versions": {
+      "torch": "2.8.0",
+      "transformers": "4.57.6",
+      "sentence-transformers": "5.1.2",
+      "scikit-learn": "1.6.1",
+      "numpy": "2.0.2",
+      "scipy": "1.13.1",
+      "datasets": "4.5.0",
+      "matplotlib": "3.9.4"
+    },
+    "total_runtime_s": 432.9
   },
   "models": {
     "embedder": "sentence-transformers/all-MiniLM-L6-v2",
@@ -21,7 +31,15 @@
     "open_source_injection_classifier_params": 184423682,
     "dedicated_embedder_ablation": "sentence-transformers/all-mpnet-base-v2",
     "dedicated_embedder_ablation_params": 109486464,
-    "reference_bank_size": 30
+    "reference_bank_size": 30,
+    "revisions": {
+      "embedder": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+      "ner": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+      "entailment": "fa2804872c3b4bd748f38c0185cc85775361e735",
+      "secondary_verifier": "d7645e127eaf1aefc7862fd59a17a5aa8558b8ce",
+      "open_source_injection_classifier": "80dda00d0b0d9a03917a7685e2ddbcd28e04dbb1",
+      "dedicated_embedder_ablation": "e8c3b32edf5434bc2275fc9bab85f82640a19130"
+    }
   },
   "stage1_injection_detection": {
     "dataset": {
@@ -30,164 +48,164 @@
       "n_families": 12
     },
     "proposed_semantic_shield": {
-      "threshold": 0.47796997427940374,
-      "precision": 0.9752,
-      "recall": 0.6556,
-      "f1": 0.7841,
-      "fpr": 0.0167,
-      "tp": 118,
-      "fp": 3,
-      "tn": 177,
-      "fn": 62,
-      "auroc": 0.9367,
-      "auprc": 0.9421,
+      "threshold": 0.47619074583053594,
+      "precision": 0.9588,
+      "recall": 0.5167,
+      "f1": 0.6715,
+      "fpr": 0.0222,
+      "tp": 93,
+      "fp": 4,
+      "tn": 176,
+      "fn": 87,
+      "auroc": 0.9174,
+      "auprc": 0.9221,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.5876,
-          "hi95": 0.7268
+          "lo95": 0.4438,
+          "hi95": 0.59
         },
         "precision_ci": {
-          "lo95": 0.9421,
-          "hi95": 1.0
+          "lo95": 0.9134,
+          "hi95": 0.9905
         },
         "auroc_ci": {
-          "lo95": 0.9126,
-          "hi95": 0.9588
+          "lo95": 0.8872,
+          "hi95": 0.9429
         }
       },
       "latency": {
         "n": 360,
-        "mean_ms": 5.183,
-        "p50_ms": 5.155,
-        "p95_ms": 5.595,
-        "p99_ms": 6.021,
-        "throughput_qps": 192.95
+        "mean_ms": 5.52,
+        "p50_ms": 5.334,
+        "p95_ms": 6.499,
+        "p99_ms": 8.027,
+        "throughput_qps": 181.17
       }
     },
     "legacy_regex": {
       "threshold": 5e-324,
       "precision": 1.0,
-      "recall": 0.2556,
-      "f1": 0.4071,
+      "recall": 0.25,
+      "f1": 0.4,
       "fpr": 0.0,
-      "tp": 46,
+      "tp": 45,
       "fp": 0,
       "tn": 180,
-      "fn": 134,
-      "auroc": 0.6278,
-      "auprc": 0.6278,
+      "fn": 135,
+      "auroc": 0.625,
+      "auprc": 0.625,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.1917,
-          "hi95": 0.3207
+          "lo95": 0.1905,
+          "hi95": 0.3135
         },
         "precision_ci": {
           "lo95": 1.0,
           "hi95": 1.0
         },
         "auroc_ci": {
-          "lo95": 0.5959,
-          "hi95": 0.6603
+          "lo95": 0.5952,
+          "hi95": 0.6568
         }
       },
       "latency": {
         "n": 360,
-        "mean_ms": 0.006,
-        "p50_ms": 0.005,
-        "p95_ms": 0.009,
-        "p99_ms": 0.01,
-        "throughput_qps": 175229.72
+        "mean_ms": 0.008,
+        "p50_ms": 0.006,
+        "p95_ms": 0.013,
+        "p99_ms": 0.014,
+        "throughput_qps": 133146.88
       }
     },
     "secondary_transformer_verifier": {
-      "threshold": 0.535024642944336,
-      "precision": 0.9355,
-      "recall": 0.4833,
-      "f1": 0.6374,
-      "fpr": 0.0333,
-      "tp": 87,
-      "fp": 6,
-      "tn": 174,
-      "fn": 93,
-      "auroc": 0.7713,
-      "auprc": 0.8293,
+      "threshold": 0.5390250086784364,
+      "precision": 0.9524,
+      "recall": 0.4444,
+      "f1": 0.6061,
+      "fpr": 0.0222,
+      "tp": 80,
+      "fp": 4,
+      "tn": 176,
+      "fn": 100,
+      "auroc": 0.8008,
+      "auprc": 0.8438,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.4121,
-          "hi95": 0.5556
+          "lo95": 0.3722,
+          "hi95": 0.5181
         },
         "precision_ci": {
-          "lo95": 0.8803,
-          "hi95": 0.9802
+          "lo95": 0.9079,
+          "hi95": 0.9888
         },
         "auroc_ci": {
-          "lo95": 0.7202,
-          "hi95": 0.8218
+          "lo95": 0.752,
+          "hi95": 0.8461
         }
       },
       "latency": {
         "n": 360,
-        "mean_ms": 173.46,
-        "p50_ms": 168.655,
-        "p95_ms": 195.306,
-        "p99_ms": 235.601,
-        "throughput_qps": 5.77
+        "mean_ms": 195.425,
+        "p50_ms": 188.796,
+        "p95_ms": 249.48,
+        "p99_ms": 271.235,
+        "throughput_qps": 5.12
       }
     },
     "open_source_injection_classifier": {
-      "threshold": 0.1699432730674744,
-      "precision": 0.9521,
-      "recall": 0.9944,
-      "f1": 0.9728,
-      "fpr": 0.05,
-      "tp": 179,
-      "fp": 9,
-      "tn": 171,
-      "fn": 1,
-      "auroc": 0.9992,
-      "auprc": 0.9992,
+      "threshold": 0.3680883646011353,
+      "precision": 0.989,
+      "recall": 1.0,
+      "f1": 0.9945,
+      "fpr": 0.0111,
+      "tp": 180,
+      "fp": 2,
+      "tn": 178,
+      "fn": 0,
+      "auroc": 1.0,
+      "auprc": 1.0,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.9819,
+          "lo95": 1.0,
           "hi95": 1.0
         },
         "precision_ci": {
-          "lo95": 0.92,
-          "hi95": 0.9795
+          "lo95": 0.9706,
+          "hi95": 1.0
         },
         "auroc_ci": {
-          "lo95": 0.9979,
-          "hi95": 0.9999
+          "lo95": 1.0,
+          "hi95": 1.0
         }
       },
       "latency": {
         "n": 360,
-        "mean_ms": 46.77,
-        "p50_ms": 46.402,
-        "p95_ms": 52.105,
-        "p99_ms": 59.304,
-        "throughput_qps": 21.38
+        "mean_ms": 57.348,
+        "p50_ms": 55.773,
+        "p95_ms": 71.767,
+        "p99_ms": 81.249,
+        "throughput_qps": 17.44
       },
       "note": "deepset/deberta-v3-base-injection, fine-tuned specifically for this task (unlike the zero-shot secondary-transformer baseline). Fair comparison HERE because it was not fine-tuned on our synthetic data; NOT evaluated on the public benchmark in Section VI-B because it WAS fine-tuned on that dataset (train/test contamination)."
     },
     "shield_generalization": {
-      "recall_in_reference_families": 0.7308,
-      "recall_held_out_families": 0.46
+      "recall_in_reference_families": 0.6095,
+      "recall_held_out_families": 0.3867
     },
     "significance": {
       "shield_vs_legacy_mcnemar": {
-        "b_a_right_b_wrong": 77,
-        "c_a_wrong_b_right": 8,
-        "p_value": 0.0
+        "b_a_right_b_wrong": 63,
+        "c_a_wrong_b_right": 19,
+        "p_value": 1e-06
       },
       "shield_vs_secondary_mcnemar": {
-        "b_a_right_b_wrong": 77,
-        "c_a_wrong_b_right": 43,
-        "p_value": 0.002447
+        "b_a_right_b_wrong": 57,
+        "c_a_wrong_b_right": 44,
+        "p_value": 0.2323
       },
       "shield_vs_opensource_mcnemar": {
-        "b_a_right_b_wrong": 10,
-        "c_a_wrong_b_right": 65,
+        "b_a_right_b_wrong": 2,
+        "c_a_wrong_b_right": 91,
         "p_value": 0.0
       },
       "note": "exact (binomial) McNemar's test on paired test-set predictions; small p-value means the two systems' error patterns are unlikely to be symmetric by chance."
@@ -200,7 +218,7 @@
     "n_adversarial": 263,
     "n_benign": 399,
     "proposed_semantic_shield": {
-      "threshold": 0.47796997427940374,
+      "threshold": 0.47619074583053594,
       "precision": 0.8,
       "recall": 0.0456,
       "f1": 0.0863,
@@ -254,7 +272,7 @@
       }
     },
     "secondary_transformer_verifier": {
-      "threshold": 0.535024642944336,
+      "threshold": 0.5390250086784364,
       "precision": 0.7018,
       "recall": 0.1521,
       "f1": 0.25,
@@ -294,84 +312,88 @@
       "n_dev": 160,
       "n_test": 240
     },
+    "selected_on_development": {
+      "window_size": 20,
+      "stride": 10
+    },
     "whole_chunk": {
-      "threshold": 0.37031769752502447,
-      "precision": 1.0,
-      "recall": 0.325,
-      "f1": 0.4906,
-      "fpr": 0.0,
-      "tp": 39,
-      "fp": 0,
-      "tn": 120,
-      "fn": 81,
-      "auroc": 0.7367,
-      "auprc": 0.7747,
+      "threshold": 0.3478361070156098,
+      "precision": 0.8511,
+      "recall": 0.3333,
+      "f1": 0.479,
+      "fpr": 0.0583,
+      "tp": 40,
+      "fp": 7,
+      "tn": 113,
+      "fn": 80,
+      "auroc": 0.6823,
+      "auprc": 0.733,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.2417,
-          "hi95": 0.4098
+          "lo95": 0.2479,
+          "hi95": 0.4154
         },
         "precision_ci": {
-          "lo95": 1.0,
-          "hi95": 1.0
+          "lo95": 0.7407,
+          "hi95": 0.9444
         },
         "auroc_ci": {
-          "lo95": 0.6735,
-          "hi95": 0.7942
+          "lo95": 0.612,
+          "hi95": 0.7443
         }
       },
       "latency": {
         "n": 240,
-        "mean_ms": 6.283,
-        "p50_ms": 6.191,
-        "p95_ms": 7.216,
-        "p99_ms": 7.762,
-        "throughput_qps": 159.15
+        "mean_ms": 6.125,
+        "p50_ms": 6.026,
+        "p95_ms": 7.022,
+        "p99_ms": 7.506,
+        "throughput_qps": 163.26
       }
     },
     "windowed_sub_chunk": {
-      "threshold": 0.4714384078979493,
-      "precision": 1.0,
-      "recall": 0.6833,
-      "f1": 0.8119,
-      "fpr": 0.0,
-      "tp": 82,
-      "fp": 0,
-      "tn": 120,
-      "fn": 38,
-      "auroc": 0.9526,
-      "auprc": 0.9545,
+      "threshold": 0.4018462002277375,
+      "precision": 0.9545,
+      "recall": 0.875,
+      "f1": 0.913,
+      "fpr": 0.0417,
+      "tp": 105,
+      "fp": 5,
+      "tn": 115,
+      "fn": 15,
+      "auroc": 0.9778,
+      "auprc": 0.9797,
       "bootstrap_95ci": {
         "recall_ci": {
-          "lo95": 0.5965,
-          "hi95": 0.7636
+          "lo95": 0.8136,
+          "hi95": 0.9279
         },
         "precision_ci": {
-          "lo95": 1.0,
-          "hi95": 1.0
+          "lo95": 0.9141,
+          "hi95": 0.9907
         },
         "auroc_ci": {
-          "lo95": 0.9265,
-          "hi95": 0.9738
+          "lo95": 0.9621,
+          "hi95": 0.9892
         }
       },
       "latency": {
         "n": 240,
-        "mean_ms": 22.866,
-        "p50_ms": 25.174,
-        "p95_ms": 38.682,
-        "p99_ms": 40.074,
-        "throughput_qps": 43.73
+        "mean_ms": 17.346,
+        "p50_ms": 13.251,
+        "p95_ms": 24.151,
+        "p99_ms": 24.483,
+        "throughput_qps": 57.65
       }
     },
     "windowed_vs_whole_mcnemar": {
-      "b_a_right_b_wrong": 43,
-      "c_a_wrong_b_right": 0,
+      "b_a_right_b_wrong": 73,
+      "c_a_wrong_b_right": 6,
       "p_value": 0.0
     },
     "relevance_score_by_class": {
-      "clean_mean": 0.3793,
-      "poisoned_mean": 0.3335,
+      "clean_mean": 0.3517,
+      "poisoned_mean": 0.3597,
       "note": "similar relevance means => poisoned chunks are not trivially separable by topical relevance alone; detection relies on the injection-similarity signal."
     }
   },
@@ -379,43 +401,43 @@
     "note": "same windowed scoring mechanism as the shared-embedding result above, but using a second, independently-loaded encoder (all-mpnet-base-v2) instead of reusing Stage 1's MiniLM instance and reference bank.",
     "embedder": "sentence-transformers/all-mpnet-base-v2",
     "extra_params_loaded": 109486464,
-    "threshold": 0.3754928410053254,
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1": 1.0,
-    "fpr": 0.0,
-    "tp": 120,
-    "fp": 0,
-    "tn": 120,
-    "fn": 0,
-    "auroc": 1.0,
-    "auprc": 1.0,
+    "threshold": 0.4695626795291901,
+    "precision": 0.972,
+    "recall": 0.8667,
+    "f1": 0.9163,
+    "fpr": 0.025,
+    "tp": 104,
+    "fp": 3,
+    "tn": 117,
+    "fn": 16,
+    "auroc": 0.9893,
+    "auprc": 0.9897,
     "bootstrap_95ci": {
       "recall_ci": {
-        "lo95": 1.0,
-        "hi95": 1.0
+        "lo95": 0.8,
+        "hi95": 0.9256
       },
       "precision_ci": {
-        "lo95": 1.0,
+        "lo95": 0.9381,
         "hi95": 1.0
       },
       "auroc_ci": {
-        "lo95": 1.0,
-        "hi95": 1.0
+        "lo95": 0.9806,
+        "hi95": 0.9963
       }
     },
     "latency": {
       "n": 240,
-      "mean_ms": 110.638,
-      "p50_ms": 82.733,
-      "p95_ms": 185.386,
-      "p99_ms": 197.157,
-      "throughput_qps": 9.04
+      "mean_ms": 72.553,
+      "p50_ms": 53.433,
+      "p95_ms": 100.111,
+      "p99_ms": 102.949,
+      "throughput_qps": 13.78
     },
     "shared_vs_dedicated_mcnemar": {
-      "b_a_right_b_wrong": 0,
-      "c_a_wrong_b_right": 38,
-      "p_value": 0.0
+      "b_a_right_b_wrong": 10,
+      "c_a_wrong_b_right": 11,
+      "p_value": 1.0
     }
   },
   "stage3_entailment_auditing": {
@@ -423,15 +445,15 @@
       "n_dev": 160,
       "n_test": 240
     },
-    "tau_entailment": 0.9705,
-    "threshold": 0.02946776151657105,
-    "precision": 1.0,
+    "tau_entailment": 0.9989,
+    "threshold": 0.0010587573051452639,
+    "precision": 0.9677,
     "recall": 1.0,
-    "f1": 1.0,
-    "fpr": 0.0,
+    "f1": 0.9836,
+    "fpr": 0.0333,
     "tp": 120,
-    "fp": 0,
-    "tn": 120,
+    "fp": 4,
+    "tn": 116,
     "fn": 0,
     "auroc": 1.0,
     "auprc": 1.0,
@@ -441,8 +463,8 @@
         "hi95": 1.0
       },
       "precision_ci": {
-        "lo95": 1.0,
-        "hi95": 1.0
+        "lo95": 0.9344,
+        "hi95": 0.9923
       },
       "auroc_ci": {
         "lo95": 1.0,
@@ -451,11 +473,11 @@
     },
     "latency": {
       "n": 240,
-      "mean_ms": 32.684,
-      "p50_ms": 32.285,
-      "p95_ms": 35.237,
-      "p99_ms": 36.63,
-      "throughput_qps": 30.6
+      "mean_ms": 30.792,
+      "p50_ms": 30.693,
+      "p95_ms": 32.244,
+      "p99_ms": 32.654,
+      "throughput_qps": 32.48
     },
     "recall_by_hallucination_type": {
       "numeric_contradiction": 1.0,
@@ -465,43 +487,43 @@
   "stage3_hard_entailment_auditing": {
     "note": "subtle perturbations (5-15% numeric drift, direction flips at unchanged magnitude, topically-consistent unsupported additions) instead of the easy set's 30-100% swings and off-topic fabrications. Evaluated at the SAME tau_entailment tuned on the easy dev split -- a genuine transfer test, not a re-optimized one.",
     "n": 360,
-    "threshold": 0.02946776151657105,
-    "precision": 1.0,
-    "recall": 0.9222,
-    "f1": 0.9595,
-    "fpr": 0.0,
-    "tp": 166,
-    "fp": 0,
-    "tn": 180,
-    "fn": 14,
-    "auroc": 0.9944,
-    "auprc": 0.9952,
+    "threshold": 0.0010587573051452639,
+    "precision": 0.5248,
+    "recall": 1.0,
+    "f1": 0.6883,
+    "fpr": 0.9056,
+    "tp": 180,
+    "fp": 163,
+    "tn": 17,
+    "fn": 0,
+    "auroc": 0.9952,
+    "auprc": 0.9974,
     "bootstrap_95ci": {
       "recall_ci": {
-        "lo95": 0.8823,
-        "hi95": 0.9579
-      },
-      "precision_ci": {
         "lo95": 1.0,
         "hi95": 1.0
       },
+      "precision_ci": {
+        "lo95": 0.4738,
+        "hi95": 0.5747
+      },
       "auroc_ci": {
-        "lo95": 0.9891,
-        "hi95": 0.9984
+        "lo95": 0.9844,
+        "hi95": 1.0
       }
     },
     "recall_by_hallucination_type": {
-      "subtle_numeric_drift": 0.7667,
+      "subtle_numeric_drift": 1.0,
       "direction_flip": 1.0,
       "subtle_unsupported_addition": 1.0
     },
     "latency": {
       "n": 360,
-      "mean_ms": 31.241,
-      "p50_ms": 31.253,
-      "p95_ms": 33.65,
-      "p99_ms": 35.232,
-      "throughput_qps": 32.01
+      "mean_ms": 30.307,
+      "p50_ms": 30.249,
+      "p95_ms": 32.048,
+      "p99_ms": 33.919,
+      "throughput_qps": 33.0
     }
   },
   "ablation_pipeline_coverage": {
@@ -512,28 +534,28 @@
         "active_stages": [
           "stage1"
         ],
-        "overall_attack_coverage": 0.2467,
+        "overall_attack_coverage": 0.21,
         "coverage_by_vector": {
-          "injection": 0.71,
-          "poisoning": 0.02,
-          "hallucination": 0.01
+          "injection": 0.59,
+          "poisoning": 0.01,
+          "hallucination": 0.03
         },
-        "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 5.183
+        "false_positive_rate_on_benign": 0.05,
+        "additive_mean_latency_ms": 5.52
       },
       "stage1_plus_stage2": {
         "active_stages": [
           "stage1",
           "stage2"
         ],
-        "overall_attack_coverage": 0.4433,
+        "overall_attack_coverage": 0.5067,
         "coverage_by_vector": {
-          "injection": 0.71,
-          "poisoning": 0.61,
-          "hallucination": 0.01
+          "injection": 0.59,
+          "poisoning": 0.88,
+          "hallucination": 0.05
         },
-        "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 28.049
+        "false_positive_rate_on_benign": 0.11,
+        "additive_mean_latency_ms": 22.866
       },
       "full_pipeline": {
         "active_stages": [
@@ -541,71 +563,76 @@
           "stage2",
           "stage3"
         ],
-        "overall_attack_coverage": 0.7633,
+        "overall_attack_coverage": 0.8267,
         "coverage_by_vector": {
-          "injection": 0.71,
-          "poisoning": 0.61,
-          "hallucination": 0.97
+          "injection": 0.6,
+          "poisoning": 0.88,
+          "hallucination": 1.0
         },
-        "false_positive_rate_on_benign": 0.03,
-        "additive_mean_latency_ms": 60.733
+        "false_positive_rate_on_benign": 0.15,
+        "additive_mean_latency_ms": 53.658
       }
     }
   },
   "pii_masking": {
     "n_sentences": 150,
-    "n_true_spans": 236,
-    "precision": 0.6745,
-    "recall": 0.8517,
-    "f1": 0.7528,
+    "n_true_spans": 227,
+    "precision": 0.6407,
+    "recall": 0.8326,
+    "f1": 0.7241,
     "recall_by_type": {
-      "cc": 1.0,
-      "name": 0.593,
+      "phone": 1.0,
       "ssn": 1.0,
       "email": 1.0,
-      "phone": 1.0
+      "cc": 1.0,
+      "name": 0.5065
     },
     "latency": {
       "n": 150,
-      "mean_ms": 30.617,
-      "p50_ms": 26.435,
-      "p95_ms": 30.902,
-      "p99_ms": 35.104,
-      "throughput_qps": 32.66
+      "mean_ms": 28.039,
+      "p50_ms": 23.752,
+      "p95_ms": 27.056,
+      "p99_ms": 27.713,
+      "throughput_qps": 35.66
     }
   },
   "end_to_end_pipeline_latency": {
-    "note": "worst-case path: benign prompt + clean context, so all 3 stages execute (no early exit). Sequential single-request timing, CPU only.",
+    "note": "complete path sampled only from threshold-passing benign prompts, clean Stage-2 chunks, and faithful response/grounding-context pairs; all 3 stages execute with no early exit. Sequential single-request timing, CPU only.",
+    "eligible_pool": {
+      "benign_prompts": 290,
+      "clean_stage2_chunks": 191,
+      "faithful_response_context_pairs": 198
+    },
     "n_trials": 200,
     "latency": {
       "n": 200,
-      "mean_ms": 70.634,
-      "p50_ms": 72.503,
-      "p95_ms": 77.612,
-      "p99_ms": 83.0,
-      "throughput_qps": 14.16
+      "mean_ms": 72.817,
+      "p50_ms": 72.71,
+      "p95_ms": 75.922,
+      "p99_ms": 78.897,
+      "throughput_qps": 13.73
     }
   },
   "comparative_summary": {
     "injection_detection_recall": {
-      "legacy_regex_filters": 0.2556,
-      "secondary_transformer_verification": 0.4833,
-      "proposed_stage1_shield": 0.6556
+      "legacy_regex_filters": 0.25,
+      "secondary_transformer_verification": 0.4444,
+      "proposed_stage1_shield": 0.5167
     },
     "false_positive_rate": {
       "legacy_regex_filters": 0.0,
-      "secondary_transformer_verification": 0.0333,
-      "proposed_stage1_shield": 0.0167
+      "secondary_transformer_verification": 0.0222,
+      "proposed_stage1_shield": 0.0222
     },
     "p99_latency_ms": {
-      "legacy_regex_filters": 0.01,
-      "secondary_transformer_verification": 235.601,
-      "proposed_stage1_shield": 6.021
+      "legacy_regex_filters": 0.014,
+      "secondary_transformer_verification": 271.235,
+      "proposed_stage1_shield": 8.027
     },
     "throughput_qps": {
-      "legacy_regex_filters": 175229.72,
-      "secondary_transformer_verification": 5.77,
-      "proposed_stage1_shield": 192.95
+      "legacy_regex_filters": 133146.88,
+      "secondary_transformer_verification": 5.12,
+      "proposed_stage1_shield": 181.17
     },
     "relative_throughput_vs_legacy_pct": {
       "legacy_regex_filters": 100.0,

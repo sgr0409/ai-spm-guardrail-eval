@@ -1,10 +1,7 @@
-"""Small hyperparameter sweep for Stage 2's windowed-scoring window_size and
-stride, evaluated on the DEV split only (never the test split, preserving
-the paper's train/dev/test discipline). Answers a real reviewer question:
-were 12/6 chosen empirically, or just asserted? Honest answer before this
-script existed: they were reasonable defaults, not swept. This script makes
-the choice empirical and reports it either way -- if 12/6 is not the best
-combo found, the paper should say so and either switch or disclose the gap.
+"""Select Stage 2 window size/stride using the development split only.
+
+The test split is never touched here. ``run_benchmark.py`` deploys the winning
+20/10 setting and evaluates it once on the held-out test split.
 """
 import json
 import sys
@@ -72,8 +69,9 @@ def main():
                          "avg_windows_per_chunk": round(float(avg_windows), 2)})
         print(results[-1])
 
+    selected = max(results, key=lambda row: row["dev_auroc"])
     out = {"note": "AUROC on Stage 2 DEV split only (n={}), never test.".format(len(dev2)),
-           "grid": results}
+           "selection_metric": "dev_auroc", "selected": selected, "grid": results}
     out_path = Path(__file__).resolve().parent / "results" / "stage2_window_sweep.json"
     out_path.write_text(json.dumps(out, indent=2))
     print("wrote", out_path)

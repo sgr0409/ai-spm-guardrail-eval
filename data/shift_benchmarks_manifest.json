@@ -1,0 +1,77 @@
+[
+  {
+    "slug": "deepset",
+    "dataset": "deepset/prompt-injections",
+    "revision": "4f61ecb038e9c3fb77e21034b22511b523772cdd",
+    "config": null,
+    "splits": [
+      "train",
+      "test"
+    ],
+    "license": "Apache-2.0",
+    "construct_note": "Positive labels include injection and task-out-of-scope prompts.",
+    "n": 662,
+    "n_benign": 399,
+    "n_injection": 263,
+    "within_source_duplicates_removed": 0,
+    "cross_source_duplicates_removed": 0,
+    "cached_path": "data/external_shift/deepset.jsonl",
+    "sha256": "33c56691ba07c8cc3e540dc37a831f9cd5d57795877b66ffe3479f666c9b52b4"
+  },
+  {
+    "slug": "xtram",
+    "dataset": "xTRam1/safe-guard-prompt-injection",
+    "revision": "a3a877d608f37b7d20d9945671902df895ecdb46",
+    "config": null,
+    "splits": [
+      "test"
+    ],
+    "license": "Not specified on the Hub card at retrieval time; fetched, not redistributed.",
+    "construct_note": "Mixed benign and prompt-injection classification benchmark.",
+    "n": 2048,
+    "n_benign": 1400,
+    "n_injection": 648,
+    "within_source_duplicates_removed": 11,
+    "cross_source_duplicates_removed": 1,
+    "cached_path": "data/external_shift/xtram.jsonl",
+    "sha256": "b1e9b55565151fb1118fa413320ca30728a30cbaf39833a96a0c220ac4a07f6d"
+  },
+  {
+    "slug": "neuralchemy",
+    "dataset": "neuralchemy/Prompt-injection-dataset",
+    "revision": "7d70432dfcf47a821612cbf9d34e9d9e3ad20e75",
+    "config": "core",
+    "splits": [
+      "test"
+    ],
+    "license": "Apache-2.0",
+    "construct_note": "Core test split with benign hard negatives and categorized attacks.",
+    "n": 942,
+    "n_benign": 390,
+    "n_injection": 552,
+    "within_source_duplicates_removed": 0,
+    "cross_source_duplicates_removed": 0,
+    "cached_path": "data/external_shift/neuralchemy.jsonl",
+    "sha256": "023903b57f306509d5a4883f71fe52fc284a3a24566acb847fb5080b2284bbcd"
+  },
+  {
+    "slug": "safeguard",
+    "dataset": "jcanode/safeguard-prompt-injection",
+    "revision": "61fbe3588450fa9b47ac1176ca7b5d2cc932344c",
+    "arrow_file": "data/test/data-00000-of-00001.arrow",
+    "splits": [
+      "test"
+    ],
+    "license": "Apache-2.0",
+    "max_per_label": 1000,
+    "selection_seed": 1729,
+    "construct_note": "Deterministic near-balanced subset capped at 1,000 rows per class from the held-out test split; attacks are independently generated and benign prompts come from public instruction corpora.",
+    "n": 1977,
+    "n_benign": 996,
+    "n_injection": 981,
+    "within_source_duplicates_removed": 0,
+    "cross_source_duplicates_removed": 5,
+    "cached_path": "data/external_shift/safeguard.jsonl",
+    "sha256": "05bdb56bf1df8d531894facfb9dc61fa2db4adde4fe74583e5024de223584e6b"
+  }
+]

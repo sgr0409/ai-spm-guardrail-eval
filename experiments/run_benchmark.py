@@ -7,6 +7,7 @@ reproducible and honestly scoped to this machine -- CPU inference on an Apple
 M3 Pro laptop, not a GPU production cluster.
 """
 import json
+import importlib.metadata
 import platform
 import random
 import statistics
@@ -28,7 +29,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from sentence_transformers import SentenceTransformer
 
 from guardrail.stage1_shield import SemanticShield
-from guardrail.stage2_rag_control import RagContextControl, _word_windows
+from guardrail.stage2_rag_control import (
+    DEFAULT_STRIDE,
+    DEFAULT_WINDOW_SIZE,
+    RagContextControl,
+    _word_windows,
+)
 from guardrail.stage3_entailment import EntailmentAuditor
 from guardrail.baselines import LegacyRegexFilter, SecondaryTransformerVerifier, OpenSourceInjectionClassifier
 from guardrail.pipeline import GuardrailPipeline
@@ -38,6 +44,7 @@ RESULTS_DIR = Path(__file__).resolve().parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 SEED = 42
 N_BOOTSTRAP = 2000
+MPNET_REVISION = "e8c3b32edf5434bc2275fc9bab85f82640a19130"
 
 
 def load_jsonl(path):
@@ -56,6 +63,53 @@ def stratified_split(examples, label_fn, dev_frac=0.4, seed=SEED):
         cut = int(len(group) * dev_frac)
         dev.extend(group[:cut])
         test.extend(group[cut:])
+    rng.shuffle(dev)
+    rng.shuffle(test)
+    return dev, test
+
+
+def grouped_split(examples, group_fn, dev_frac=0.4, seed=SEED):
+    """Split whole groups so related rows cannot cross development/test."""
+    rng = random.Random(seed)
+    groups = {}
+    for example in examples:
+        groups.setdefault(group_fn(example), []).append(example)
+    keys = list(groups)
+    rng.shuffle(keys)
+    cut = int(len(keys) * dev_frac)
+    dev_keys = set(keys[:cut])
+    dev = [example for key in keys if key in dev_keys for example in groups[key]]
+    test = [example for key in keys if key not in dev_keys for example in groups[key]]
+    rng.shuffle(dev)
+    rng.shuffle(test)
+    return dev, test
+
+
+def stage1_reference_holdout_split(examples, seed=SEED):
+    """Balanced 240/360 split with reference-omitted families test-only.
+
+    The 75 attacks from families absent from the semantic reference bank must
+    not influence threshold selection if their result is described as a
+    family-level holdout. Development therefore contains 120 benign examples
+    and 120 attacks from represented families; test contains the remaining 180
+    benign, 105 represented-family attacks, and all 75 omitted-family attacks.
+    """
+    rng = random.Random(seed)
+    benign = [e for e in examples if e["label"] == "benign"]
+    represented = [
+        e for e in examples
+        if e["label"] == "adversarial" and e["in_reference_set"]
+    ]
+    omitted = [
+        e for e in examples
+        if e["label"] == "adversarial" and not e["in_reference_set"]
+    ]
+    for group in (benign, represented, omitted):
+        rng.shuffle(group)
+    if (len(benign), len(represented), len(omitted)) != (300, 225, 75):
+        raise ValueError("unexpected Stage-1 class/family counts")
+    dev = benign[:120] + represented[:120]
+    test = benign[120:] + represented[120:] + omitted
     rng.shuffle(dev)
     rng.shuffle(test)
     return dev, test
@@ -184,6 +238,37 @@ def count_params(model):
         return None
 
 
+def maximum_full_coverage_matches(true_spans, predicted_spans):
+    """Maximum one-to-one matching when a prediction fully covers a truth span.
+
+    One broad prediction must not receive credit for multiple ground-truth
+    entities. Labels are intentionally ignored because this benchmark measures
+    whether sensitive text is redacted, not whether its PII type is classified.
+    """
+    edges = {
+        ti: [
+            pi for pi, pred in enumerate(predicted_spans)
+            if pred[0] <= truth["start"] and pred[1] >= truth["end"]
+        ]
+        for ti, truth in enumerate(true_spans)
+    }
+    pred_to_true = {}
+
+    def augment(ti, seen):
+        for pi in edges[ti]:
+            if pi in seen:
+                continue
+            seen.add(pi)
+            if pi not in pred_to_true or augment(pred_to_true[pi], seen):
+                pred_to_true[pi] = ti
+                return True
+        return False
+
+    for ti in edges:
+        augment(ti, set())
+    return {(ti, pi) for pi, ti in pred_to_true.items()}
+
+
 def main():
     t_run_start = time.time()
     torch.manual_seed(SEED)
@@ -196,6 +281,13 @@ def main():
             "device": "cpu",
             "seed": SEED,
             "bootstrap_resamples": N_BOOTSTRAP,
+            "package_versions": {
+                package: importlib.metadata.version(package)
+                for package in (
+                    "torch", "transformers", "sentence-transformers", "scikit-learn",
+                    "numpy", "scipy", "datasets", "matplotlib",
+                )
+            },
         }
     }
     raw = {}  # raw score/label arrays exported for make_figures.py
@@ -208,7 +300,9 @@ def main():
     legacy = LegacyRegexFilter()
     secondary = SecondaryTransformerVerifier(device="cpu")
     opensource = OpenSourceInjectionClassifier(device="cpu")
-    dedicated_embedder = SentenceTransformer("sentence-transformers/all-mpnet-base-v2", device="cpu")
+    dedicated_embedder = SentenceTransformer(
+        "sentence-transformers/all-mpnet-base-v2", revision=MPNET_REVISION, device="cpu"
+    )
 
     results["models"] = {
         "embedder": "sentence-transformers/all-MiniLM-L6-v2",
@@ -223,6 +317,14 @@ def main():
         "dedicated_embedder_ablation": "sentence-transformers/all-mpnet-base-v2",
         "dedicated_embedder_ablation_params": count_params(dedicated_embedder),
         "reference_bank_size": len(reference_bank),
+        "revisions": {
+            "embedder": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+            "ner": "d1a3e8f13f8c3566299d95fcfc9a8d2382a9affc",
+            "entailment": "fa2804872c3b4bd748f38c0185cc85775361e735",
+            "secondary_verifier": "d7645e127eaf1aefc7862fd59a17a5aa8558b8ce",
+            "open_source_injection_classifier": "80dda00d0b0d9a03917a7685e2ddbcd28e04dbb1",
+            "dedicated_embedder_ablation": MPNET_REVISION,
+        },
     }
 
     # ------------------------------------------------------------------ #
@@ -230,7 +332,7 @@ def main():
     # ------------------------------------------------------------------ #
     print("Stage 1: injection detection...", flush=True)
     stage1 = load_jsonl(DATA_DIR / "stage1_eval.jsonl")
-    dev1, test1 = stratified_split(stage1, lambda e: e["label"], dev_frac=0.4)
+    dev1, test1 = stage1_reference_holdout_split(stage1)
 
     def run_stage1_system(score_fn, examples):
         scores, latencies = [], []
@@ -393,6 +495,10 @@ def main():
 
     results["stage2_rag_context_control"] = {
         "dataset": {"n_dev": len(dev2), "n_test": len(test2)},
+        "selected_on_development": {
+            "window_size": DEFAULT_WINDOW_SIZE,
+            "stride": DEFAULT_STRIDE,
+        },
         "whole_chunk": {**stage2_eval, "latency": latency_stats(test2_lat)},
         "windowed_sub_chunk": {**stage2_eval_win, "latency": latency_stats(test2_lat_win)},
         "windowed_vs_whole_mcnemar": mcnemar_windowed,
@@ -464,7 +570,10 @@ def main():
     # ------------------------------------------------------------------ #
     print("Stage 3: entailment auditing...", flush=True)
     stage3 = load_jsonl(DATA_DIR / "stage3_eval.jsonl")
-    dev3, test3 = stratified_split(stage3, lambda e: e["label"], dev_frac=0.4)
+    # Each synthetic fact has a faithful and a hallucinated response. Keep the
+    # entire factual context on one side of the split to prevent context-level
+    # leakage into threshold selection.
+    dev3, test3 = grouped_split(stage3, lambda e: e["context"], dev_frac=0.4)
 
     def run_stage3(examples):
         risk_scores, latencies = [], []
@@ -656,13 +765,9 @@ def main():
         masked_text, pred_spans = shield.mask_entities(ex["text"])
         mask_latencies.append(time.perf_counter() - t0)
         true_spans = ex["pii_spans"]
-        matched_true = set()
-        matched_pred = set()
-        for ti, t in enumerate(true_spans):
-            for pi, p in enumerate(pred_spans):
-                if p[0] <= t["start"] and p[1] >= t["end"]:  # full coverage
-                    matched_true.add(ti)
-                    matched_pred.add(pi)
+        matches = maximum_full_coverage_matches(true_spans, pred_spans)
+        matched_true = {ti for ti, _ in matches}
+        matched_pred = {pi for _, pi in matches}
         for ti, t in enumerate(true_spans):
             if ti in matched_true:
                 tp += 1
@@ -693,23 +798,49 @@ def main():
     # ------------------------------------------------------------------ #
     print("End-to-end pipeline latency...", flush=True)
     rng = random.Random(SEED)
-    benign_prompts = [e["text"] for e in stage1 if e["label"] == "benign"]
-    clean_chunks = [(e["query"], e["chunk"]) for e in stage2 if e["label"] == "clean"]
-    faithful_pairs = [(e["response"], e["context"]) for e in stage3 if e["label"] == "faithful"]
+    # Labels alone do not guarantee a complete path because every tuned stage
+    # can produce false positives. Filter the timing pool by the deployed
+    # thresholds, and keep each faithful response paired with its own context.
+    benign_prompts = [
+        e["text"] for e in stage1
+        if e["label"] == "benign" and shield.injection_score(e["text"]) < tau_injection
+    ]
+    clean_chunks = [
+        e["chunk"] for e in stage2
+        if e["label"] == "clean"
+        and rag_control.poison_score_windowed(e["chunk"]) < tau_context_win
+    ]
+    faithful_pairs = [
+        (e["response"], e["context"]) for e in stage3
+        if e["label"] == "faithful"
+        and auditor.entailment_prob(e["response"], e["context"]) >= tau_entailment
+    ]
+    if not benign_prompts or not clean_chunks or not faithful_pairs:
+        raise RuntimeError("no complete-path examples remain for end-to-end timing")
 
     n_e2e = 200
-    pipeline = GuardrailPipeline(shield, rag_control, auditor, tau_injection, tau_context, tau_entailment)
+    pipeline = GuardrailPipeline(
+        shield, rag_control, auditor, tau_injection, tau_context_win, tau_entailment
+    )
     e2e_latencies = []
     for _ in range(n_e2e):
         prompt = rng.choice(benign_prompts)
-        _, chunk = rng.choice(clean_chunks)
-        response, _ = rng.choice(faithful_pairs)
-        trace = pipeline.run(prompt, chunk, response)
+        chunk = rng.choice(clean_chunks)
+        response, grounding_context = rng.choice(faithful_pairs)
+        trace = pipeline.run(prompt, chunk, response, grounding_context)
+        if trace["decision"] != "approved" or "stage3_latency_s" not in trace:
+            raise AssertionError("end-to-end timing trial exited before completing all stages")
         e2e_latencies.append(trace["total_latency_s"])
 
     results["end_to_end_pipeline_latency"] = {
-        "note": "worst-case path: benign prompt + clean context, so all 3 stages execute "
-                "(no early exit). Sequential single-request timing, CPU only.",
+        "note": "complete path sampled only from threshold-passing benign prompts, clean Stage-2 "
+                "chunks, and faithful response/grounding-context pairs; all 3 stages execute with "
+                "no early exit. Sequential single-request timing, CPU only.",
+        "eligible_pool": {
+            "benign_prompts": len(benign_prompts),
+            "clean_stage2_chunks": len(clean_chunks),
+            "faithful_response_context_pairs": len(faithful_pairs),
+        },
         "n_trials": n_e2e,
         "latency": latency_stats(e2e_latencies),
     }

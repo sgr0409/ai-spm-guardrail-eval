@@ -11,11 +11,13 @@ from sentence_transformers import CrossEncoder
 # confirmed via the model's config.json id2label, not assumed:
 # {0: "contradiction", 1: "entailment", 2: "neutral"}
 LABEL_ORDER = ["contradiction", "entailment", "neutral"]
+MODEL_REVISION = "fa2804872c3b4bd748f38c0185cc85775361e735"
 
 
 class EntailmentAuditor:
-    def __init__(self, model_name="cross-encoder/nli-deberta-v3-small", device=None):
-        self.model = CrossEncoder(model_name, device=device)
+    def __init__(self, model_name="cross-encoder/nli-deberta-v3-small",
+                 revision=MODEL_REVISION, device=None):
+        self.model = CrossEncoder(model_name, revision=revision, device=device)
         self.entailment_idx = LABEL_ORDER.index("entailment")
 
     def entailment_prob(self, response, context):

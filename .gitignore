@@ -5,3 +5,5 @@ __pycache__/
 .tools/
 .idea/
 .claude/
+data/external_shift/*.jsonl
+data/external_shift/shift_benchmarks_metadata.json

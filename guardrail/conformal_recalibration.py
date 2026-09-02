@@ -23,6 +23,81 @@ class DriftDecision:
     triggered: bool
 
 
+class RegimeAdaptiveDTCR:
+    """Stateful DTCR with horizon-wide false-trigger error spending.
+
+    The controller tests at ``false_trigger_budget / horizon`` in every
+    monitor window. After a trigger, the caller supplies the independently
+    labelled calibration window and the controller refreshes both its
+    unlabeled regime reference and benign conformal reference. The monitoring
+    budget is not reset, so repeated use cannot silently multiply the declared
+    horizon-wide false-trigger budget.
+    """
+
+    def __init__(
+        self,
+        monitor_reference_scores,
+        benign_calibration_scores,
+        horizon,
+        false_trigger_budget=0.05,
+        alpha=0.05,
+    ):
+        self.monitor_reference_scores = np.asarray(monitor_reference_scores, dtype=float)
+        self.benign_calibration_scores = np.asarray(benign_calibration_scores, dtype=float)
+        if self.monitor_reference_scores.size == 0:
+            raise ValueError("monitor reference must be non-empty")
+        if self.benign_calibration_scores.size == 0:
+            raise ValueError("benign calibration reference must be non-empty")
+        if not isinstance(horizon, int) or horizon <= 0:
+            raise ValueError("horizon must be a positive integer")
+        if not 0.0 < false_trigger_budget < 1.0:
+            raise ValueError("false-trigger budget must lie in (0, 1)")
+        if not 0.0 < alpha < 1.0:
+            raise ValueError("alpha must lie in (0, 1)")
+        self.horizon = horizon
+        self.false_trigger_budget = false_trigger_budget
+        self.alpha = alpha
+        self.window_significance = false_trigger_budget / horizon
+        self.windows_seen = 0
+        self._awaiting_recalibration = False
+
+    def monitor(self, scores):
+        """Test one label-hidden window against the currently deployed regime."""
+        if self._awaiting_recalibration:
+            raise RuntimeError("recalibrate the triggered window before monitoring again")
+        if self.windows_seen >= self.horizon:
+            raise RuntimeError("declared monitoring horizon is exhausted")
+        self.windows_seen += 1
+        decision = detect_score_shift(
+            self.monitor_reference_scores, scores, self.window_significance
+        )
+        self._awaiting_recalibration = decision.triggered
+        return decision
+
+    def recalibrate(self, monitor_scores, calibration_scores, calibration_labels):
+        """Refresh regime and benign references after a monitor trigger."""
+        if not self._awaiting_recalibration:
+            raise RuntimeError("recalibration is permitted only after a trigger")
+        monitor_scores = np.asarray(monitor_scores, dtype=float)
+        calibration_scores = np.asarray(calibration_scores, dtype=float)
+        labels = np.asarray(calibration_labels, dtype=int)
+        if monitor_scores.size == 0:
+            raise ValueError("monitor scores must be non-empty")
+        if calibration_scores.size != labels.size or labels.size == 0:
+            raise ValueError("calibration scores and labels must be non-empty and aligned")
+        benign = calibration_scores[labels == 0]
+        if benign.size == 0:
+            raise ValueError("recalibration requires labelled benign scores")
+        self.monitor_reference_scores = monitor_scores.copy()
+        self.benign_calibration_scores = benign.copy()
+        self._awaiting_recalibration = False
+
+    def predict(self, scores):
+        if self._awaiting_recalibration:
+            raise RuntimeError("triggered window must be recalibrated before prediction")
+        return conformal_predict(scores, self.benign_calibration_scores, self.alpha)
+
+
 def detect_score_shift(
     source_scores: Iterable[float],
     target_monitor_scores: Iterable[float],

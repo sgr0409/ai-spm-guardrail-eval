@@ -28,7 +28,7 @@ class FakeRagControl:
         self._poison_score = poison_score
         self.calls = 0
 
-    def poison_score(self, chunk):
+    def poison_score_windowed(self, chunk):
         self.calls += 1
         return self._poison_score
 
@@ -37,9 +37,11 @@ class FakeAuditor:
     def __init__(self, entailment_prob):
         self._entailment_prob = entailment_prob
         self.calls = 0
+        self.last_pair = None
 
     def entailment_prob(self, response, context):
         self.calls += 1
+        self.last_pair = (response, context)
         return self._entailment_prob
 
 
@@ -107,6 +109,13 @@ class GuardrailPipelineTests(unittest.TestCase):
         trace = pipeline.run("prompt", "chunk", "response")
         self.assertEqual(trace["decision"], "approved")
         self.assertTrue(trace["stage3_approved"])
+
+    def test_stage3_can_use_distinct_grounding_context(self):
+        pipeline, _, _, auditor = make_pipeline(
+            injection_score=0.1, poison_score=0.1, entailment_prob=0.9,
+        )
+        pipeline.run("prompt", "screened chunk", "response", "grounding context")
+        self.assertEqual(auditor.last_pair, ("response", "grounding context"))
 
     def test_trace_includes_latency_fields_for_every_stage_reached(self):
         pipeline, _, _, _ = make_pipeline(

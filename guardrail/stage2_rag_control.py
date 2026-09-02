@@ -2,16 +2,19 @@
 
 Retrieved-document chunks can carry indirect prompt injections -- instructions
 embedded in third-party text that a naive RAG loop would feed straight into the
-model's context window. Stage 2 reuses the Stage-1 embedding space (the two
-stages differ only in *which* reference bank and threshold they score against,
-not in mechanism) and flags a chunk as poisoned when its similarity to the
+model's context window. Stage 2 reuses the Stage-1 embedding space and the same
+reference bank (the two stages differ in the text being screened and the
+deployed threshold, not in scoring mechanism) and flags a chunk as poisoned when its similarity to the
 injection reference bank exceeds tau_context, independent of how topically
 relevant it is to the query.
 """
 from guardrail.stage1_shield import SemanticShield
 
+DEFAULT_WINDOW_SIZE = 20
+DEFAULT_STRIDE = 10
 
-def _word_windows(text, window_size=12, stride=6):
+
+def _word_windows(text, window_size=DEFAULT_WINDOW_SIZE, stride=DEFAULT_STRIDE):
     words = text.split()
     if len(words) <= window_size:
         return [text]
@@ -45,7 +48,9 @@ class RagContextControl:
         content moves the whole-chunk vector only partway toward D."""
         return self.shield.injection_score(chunk)
 
-    def poison_score_windowed(self, chunk, window_size=12, stride=6):
+    def poison_score_windowed(
+        self, chunk, window_size=DEFAULT_WINDOW_SIZE, stride=DEFAULT_STRIDE
+    ):
         """Max injection-similarity over overlapping word windows instead of
         the whole chunk at once, to localize a short injected instruction
         buried in longer legitimate text. O(k) embedding calls per chunk of

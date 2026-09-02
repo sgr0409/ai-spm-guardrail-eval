@@ -7,6 +7,7 @@ from guardrail.conformal_recalibration import (
     detect_score_shift,
     empirical_fpr_threshold,
     negative_conformal_pvalues,
+    RegimeAdaptiveDTCR,
     stratified_three_way_indices,
 )
 
@@ -48,6 +49,22 @@ class ConformalRecalibrationTests(unittest.TestCase):
         self.assertEqual(set(np.r_[monitor, calibration, test]), set(range(100)))
         for idx in (monitor, calibration, test):
             self.assertEqual(set(y[idx]), {0, 1})
+
+    def test_regime_adaptive_controller_spends_budget_across_declared_horizon(self):
+        controller = RegimeAdaptiveDTCR([0.1, 0.2], [0.1, 0.2], horizon=10,
+                                        false_trigger_budget=0.05)
+        self.assertAlmostEqual(controller.window_significance, 0.005)
+        for _ in range(10):
+            controller.monitor([0.1, 0.2])
+        with self.assertRaises(RuntimeError):
+            controller.monitor([0.1, 0.2])
+
+    def test_regime_adaptive_controller_refreshes_both_references(self):
+        controller = RegimeAdaptiveDTCR([0.1] * 100, [0.1, 0.2], horizon=2)
+        self.assertTrue(controller.monitor([0.9] * 100).triggered)
+        controller.recalibrate([0.8, 0.9], [0.3, 0.8, 0.4], [0, 1, 0])
+        np.testing.assert_allclose(controller.monitor_reference_scores, [0.8, 0.9])
+        np.testing.assert_allclose(controller.benign_calibration_scores, [0.3, 0.4])
 
 
 if __name__ == "__main__":

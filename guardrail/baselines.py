@@ -7,14 +7,14 @@ SecondaryTransformerVerifier -- a heavyweight zero-shot classification pass
                          for "call a second, general-purpose model to judge every
                          input" (the approach used by NeMo-Guardrails-style
                          secondary-LLM verification). This is the realistic
-                         accuracy/latency ceiling the proposed pipeline is
+                         accuracy/latency comparison the proposed pipeline is
                          benchmarked against.
 OpenSourceInjectionClassifier -- deepset/deberta-v3-base-injection, a
                          DeBERTa-v3-base model fine-tuned specifically for
                          prompt-injection classification (not a general-purpose
                          NLI model pressed into service). A real, widely-used
                          open-source guardrail component, included as a fourth
-                         comparison system. IMPORTANT: this model was
+                         open-source comparison system. IMPORTANT: this model was
                          fine-tuned on deepset's prompt-injections dataset,
                          which is also this project's public external
                          benchmark (Section VI-B) -- so it is only a fair,
@@ -26,6 +26,9 @@ OpenSourceInjectionClassifier -- deepset/deberta-v3-base-injection, a
 """
 import re
 from transformers import pipeline
+
+BART_MNLI_REVISION = "d7645e127eaf1aefc7862fd59a17a5aa8558b8ce"
+DEEPSET_INJECTION_REVISION = "80dda00d0b0d9a03917a7685e2ddbcd28e04dbb1"
 
 REGEX_PATTERNS = [
     re.compile(p, re.IGNORECASE)
@@ -56,10 +59,12 @@ class LegacyRegexFilter:
 
 
 class SecondaryTransformerVerifier:
-    def __init__(self, model_name="facebook/bart-large-mnli", device=None):
+    def __init__(self, model_name="facebook/bart-large-mnli",
+                 revision=BART_MNLI_REVISION, device=None):
         self.clf = pipeline(
             "zero-shot-classification",
             model=model_name,
+            revision=revision,
             device=-1 if device in (None, "cpu") else 0,
         )
         self.candidate_labels = ["prompt injection attack", "safe enterprise query"]
@@ -74,10 +79,12 @@ class SecondaryTransformerVerifier:
 
 
 class OpenSourceInjectionClassifier:
-    def __init__(self, model_name="deepset/deberta-v3-base-injection", device=None):
+    def __init__(self, model_name="deepset/deberta-v3-base-injection",
+                 revision=DEEPSET_INJECTION_REVISION, device=None):
         self.clf = pipeline(
             "text-classification",
             model=model_name,
+            revision=revision,
             top_k=None,
             device=-1 if device in (None, "cpu") else 0,
         )

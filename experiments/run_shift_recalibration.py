@@ -4,11 +4,12 @@ This experiment is intentionally separate from ``run_benchmark.py``: it
 freezes every detector, uses a source development distribution to establish
 the original operating point, and then evaluates threshold transfer and
 recalibration on disjoint monitor/calibration/test partitions of four public
-target datasets.  Ten fixed seeds are reported as overlapping sensitivity
+target datasets.  One hundred fixed seeds are reported as overlapping sensitivity
 analyses, not independent replications.
 """
 
 import json
+import hashlib
 import sys
 from pathlib import Path
 
@@ -27,6 +28,7 @@ from guardrail.conformal_recalibration import (
     empirical_fpr_threshold,
     stratified_three_way_indices,
 )
+from guardrail.stage1_shield import EMBEDDER_REVISION
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -52,6 +54,44 @@ def load_jsonl(path):
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
+def file_sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def detector_fingerprints(reference_bank):
+    specs = {
+        "semantic_shield": {
+            "id": "sentence-transformers/all-MiniLM-L6-v2",
+            "revision": EMBEDDER_REVISION,
+            "reference_bank": list(reference_bank),
+        },
+        **MODEL_SPECS,
+    }
+    return {
+        detector: hashlib.sha256(
+            json.dumps(spec, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        for detector, spec in specs.items()
+    }
+
+
+def cache_entry_is_current(cache, detector, domain, fingerprint, n_rows, model_fingerprint):
+    score_key = f"{detector}__{domain}"
+    # Bind provenance to each score array. A domain-only hash can be updated
+    # when one detector is rescored and then make another detector's stale
+    # array appear current.
+    hash_key = f"data_sha256__{detector}__{domain}"
+    model_key = f"model_sha256__{detector}"
+    return (
+        score_key in cache
+        and hash_key in cache
+        and model_key in cache
+        and str(cache[hash_key]) == fingerprint
+        and str(cache[model_key]) == model_fingerprint
+        and len(cache[score_key]) == n_rows
+    )
+
+
 def l2_normalize(values):
     values = np.atleast_2d(values)
     norms = np.linalg.norm(values, axis=1, keepdims=True)
@@ -60,7 +100,9 @@ def l2_normalize(values):
 
 
 def score_shield(texts, reference_bank):
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device="cpu")
+    model = SentenceTransformer(
+        "sentence-transformers/all-MiniLM-L6-v2", revision=EMBEDDER_REVISION, device="cpu"
+    )
     reference = l2_normalize(model.encode(reference_bank, batch_size=64, convert_to_numpy=True,
                                           show_progress_bar=False))
     embedded = l2_normalize(model.encode(texts, batch_size=64, convert_to_numpy=True,
@@ -202,10 +244,13 @@ def aggregate_runs(runs):
 
 
 def main():
-    source_rows = load_jsonl(DATA / "stage1_eval.jsonl")
+    source_path = DATA / "stage1_eval.jsonl"
+    source_rows = load_jsonl(source_path)
     domains = {"source_synthetic": source_rows}
+    domain_paths = {"source_synthetic": source_path}
     for path in sorted((DATA / "external_shift").glob("*.jsonl")):
         domains[path.stem] = load_jsonl(path)
+        domain_paths[path.stem] = path
 
     domain_texts = {name: [row["text"] for row in rows] for name, rows in domains.items()}
     domain_labels = {
@@ -214,11 +259,16 @@ def main():
     }
     cache_path = RESULTS / "shift_scores.npz"
     cache = dict(np.load(cache_path)) if cache_path.exists() else {}
+    fingerprints = {name: file_sha256(path) for name, path in domain_paths.items()}
     reference_bank = json.loads((DATA / "reference_bank.json").read_text())
+    model_fingerprints = detector_fingerprints(reference_bank)
 
     detector_specs = {"semantic_shield": None, **MODEL_SPECS}
     for detector, spec in detector_specs.items():
-        missing = [name for name in domains if f"{detector}__{name}" not in cache]
+        missing = [name for name in domains if not cache_entry_is_current(
+            cache, detector, name, fingerprints[name], len(domains[name]),
+            model_fingerprints[detector],
+        )]
         if not missing:
             continue
         joined = [text for name in missing for text in domain_texts[name]]
@@ -228,6 +278,8 @@ def main():
         for name in missing:
             n = len(domain_texts[name])
             cache[f"{detector}__{name}"] = scores[cursor:cursor + n]
+            cache[f"data_sha256__{detector}__{name}"] = np.asarray(fingerprints[name])
+            cache[f"model_sha256__{detector}"] = np.asarray(model_fingerprints[detector])
             cursor += n
         np.savez(cache_path, **cache)
 
@@ -245,7 +297,7 @@ def main():
             "semantic_shield": {"id": "sentence-transformers/all-MiniLM-L6-v2 + fixed reference bank"},
             **MODEL_SPECS,
         },
-        "datasets": json.loads((DATA / "external_shift" / "shift_benchmarks_metadata.json").read_text()),
+        "datasets": json.loads((DATA / "shift_benchmarks_manifest.json").read_text()),
         "results": {},
     }
     for detector in detector_specs:

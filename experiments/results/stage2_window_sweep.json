@@ -1,47 +1,54 @@
 {
   "note": "AUROC on Stage 2 DEV split only (n=160), never test.",
+  "selection_metric": "dev_auroc",
+  "selected": {
+    "window_size": 20,
+    "stride": 10,
+    "dev_auroc": 0.9756,
+    "avg_windows_per_chunk": 2.98
+  },
   "grid": [
     {
       "window_size": 8,
       "stride": 4,
-      "dev_auroc": 0.95,
-      "avg_windows_per_chunk": 5.78
+      "dev_auroc": 0.928,
+      "avg_windows_per_chunk": 8.13
     },
     {
       "window_size": 8,
       "stride": 8,
-      "dev_auroc": 0.9208,
-      "avg_windows_per_chunk": 3.68
+      "dev_auroc": 0.8992,
+      "avg_windows_per_chunk": 4.86
     },
     {
       "window_size": 12,
       "stride": 6,
-      "dev_auroc": 0.9706,
-      "avg_windows_per_chunk": 3.58
+      "dev_auroc": 0.907,
+      "avg_windows_per_chunk": 5.26
     },
     {
       "window_size": 12,
       "stride": 12,
-      "dev_auroc": 0.9844,
-      "avg_windows_per_chunk": 2.59
+      "dev_auroc": 0.9352,
+      "avg_windows_per_chunk": 3.38
     },
     {
       "window_size": 16,
       "stride": 8,
-      "dev_auroc": 0.9987,
-      "avg_windows_per_chunk": 2.68
+      "dev_auroc": 0.9189,
+      "avg_windows_per_chunk": 3.86
     },
     {
       "window_size": 16,
       "stride": 16,
-      "dev_auroc": 0.9628,
-      "avg_windows_per_chunk": 2.18
+      "dev_auroc": 0.9284,
+      "avg_windows_per_chunk": 2.52
     },
     {
       "window_size": 20,
       "stride": 10,
-      "dev_auroc": 1.0,
-      "avg_windows_per_chunk": 1.99
+      "dev_auroc": 0.9756,
+      "avg_windows_per_chunk": 2.98
     }
   ]
 }

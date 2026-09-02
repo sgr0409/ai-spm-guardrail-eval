@@ -68,6 +68,17 @@ class MaskEntitiesTests(unittest.TestCase):
         self.assertEqual(kept, [(0, 6, "ORG")])
         self.assertEqual(masked, "[REDACTED:ORG]ghij")
 
+    def test_longer_later_start_wins_global_overlap_resolution(self):
+        shield = make_shield()
+        text = "abcdefghij"
+        shield.ner = lambda t: [
+            {"entity_group": "PER", "start": 0, "end": 4},
+            {"entity_group": "ORG", "start": 2, "end": 9},
+        ]
+        masked, kept = shield.mask_entities(text)
+        self.assertEqual(kept, [(2, 9, "ORG")])
+        self.assertEqual(masked, "ab[REDACTED:ORG]j")
+
     def test_non_overlapping_spans_are_both_kept(self):
         shield = make_shield()
         text = "Contact John Smith at john@example.com for details."

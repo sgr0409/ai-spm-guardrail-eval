@@ -16,11 +16,15 @@ class GuardrailPipeline:
         self.tau_context = tau_context
         self.tau_entailment = tau_entailment
 
-    def run(self, prompt, context_chunk, response):
+    def run(self, prompt, context_chunk, response, grounding_context=None):
         """Runs all three stages sequentially and returns a decision trace with
         per-stage wall-clock latency. Sequential timing is a conservative
         (worst-case) measurement; Sec. VI discusses the async deployment model
-        separately from what is actually benchmarked here."""
+        separately from what is actually benchmarked here. ``context_chunk``
+        is screened by Stage 2; ``grounding_context`` may contain the fuller
+        context supporting the response and defaults to the same chunk."""
+        if grounding_context is None:
+            grounding_context = context_chunk
         t_start = time.perf_counter()
         trace = {}
 
@@ -41,7 +45,7 @@ class GuardrailPipeline:
         trace["stage1_mask_latency_s"] = time.perf_counter() - t0
 
         t0 = time.perf_counter()
-        poison_score = self.rag_control.poison_score(context_chunk)
+        poison_score = self.rag_control.poison_score_windowed(context_chunk)
         trace["stage2_poison_score"] = poison_score
         trace["stage2_blocked"] = poison_score >= self.tau_context
         trace["stage2_latency_s"] = time.perf_counter() - t0
@@ -51,7 +55,7 @@ class GuardrailPipeline:
             return trace
 
         t0 = time.perf_counter()
-        entail_prob = self.auditor.entailment_prob(response, context_chunk)
+        entail_prob = self.auditor.entailment_prob(response, grounding_context)
         trace["stage3_entailment_prob"] = entail_prob
         trace["stage3_approved"] = entail_prob >= self.tau_entailment
         trace["stage3_latency_s"] = time.perf_counter() - t0
