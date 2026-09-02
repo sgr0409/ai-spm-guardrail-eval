@@ -279,6 +279,10 @@ targets. Latency numbers come from one CPU machine, and guardrail-aware
 adaptive attackers are out of scope. Read the paper before treating any
 number as a production guarantee.
 
+## License
+
+MIT — see [LICENSE](LICENSE).
+
 ## Contact
 
 Sagar Pradip Chaudhari — schaud16@binghamton.edu
