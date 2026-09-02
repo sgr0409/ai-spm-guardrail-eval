@@ -281,4 +281,4 @@ number as a production guarantee.
 
 ## Contact
 
-Sagar Pradip Chaudhari — sagar.chaudhari904@gmail.com
+Sagar Pradip Chaudhari — schaud16@binghamton.edu

@@ -37,8 +37,8 @@ results = json.loads((RESULTS_DIR / "results.json").read_text())
 
 
 def savefig(name):
-    """Saves both a PDF (vector, for LaTeX) and a PNG (for the docx build,
-    since python-docx cannot embed vector PDFs) from the same figure."""
+    """Saves both a PDF (vector, for LaTeX) and a PNG (for quick preview
+    without a PDF viewer, e.g. on GitHub) from the same figure."""
     path = FIG_DIR / name
     plt.tight_layout()
     plt.savefig(path, bbox_inches="tight")

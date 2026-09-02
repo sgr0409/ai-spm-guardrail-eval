@@ -6,4 +6,3 @@ numpy>=1.26
 scipy>=1.13
 datasets>=2.19
 matplotlib>=3.9
-python-docx>=1.1
