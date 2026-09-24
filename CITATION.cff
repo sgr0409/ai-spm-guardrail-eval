@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this code or its evaluation artifacts, please cite this software release."
+type: software
+title: "AI-SPM Guardrail Eval"
+version: 1.0.0
+date-released: 2026-09-24
+authors:
+  - family-names: Chaudhari
+    given-names: Sagar Pradip
+    affiliation: Independent Researcher
+repository-code: "https://github.com/sgr0409/ai-spm-guardrail-eval"
+license: MIT
+abstract: >-
+  Code and evaluation artifacts accompanying the manuscript
+  "Regime-Adaptive Conformal Guardrails for Prompt Injection Attacks under
+  Distribution Shift". This release includes the three-stage guardrail
+  implementation, drift-triggered and regime-adaptive conformal recalibration,
+  synthetic evaluation datasets, public-benchmark retrieval scripts and
+  provenance manifest, recorded experimental results, cached model scores,
+  figure-generation scripts, unit tests, and the pinned Python dependency list.
+keywords:
+  - prompt injection
+  - conformal prediction
+  - distribution shift
+  - AI security
+  - reproducibility

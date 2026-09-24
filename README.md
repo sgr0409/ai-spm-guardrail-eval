@@ -9,8 +9,8 @@ zero-shot transformer, and a fine-tuned open-source injection classifier, with
 full reproducible code, data-generation scripts, and results.
 
 This repo is the code and data release accompanying the paper
-"Regime-Adaptive Drift-Triggered Conformal Recalibration for Prompt-Injection Guardrails
-Under Distribution Shift." (Link to be added once published.)
+"Regime-Adaptive Conformal Guardrails for Prompt Injection Attacks under
+Distribution Shift." (Link to be added once published.)
 
 ## The central contribution
 
